@@ -1,1 +1,1 @@
-# Reinforcement-Learning-AI
+# Reinforcement Learning AI for Pokemon

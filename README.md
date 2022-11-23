@@ -1,1 +1,5 @@
-# Reinforcement Learning AI for Pokemon
+# Reinforcement Learning AI for Pokémon
+
+## Setup
+
+## Implementation

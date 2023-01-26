@@ -33,8 +33,8 @@ class Q_Table:
     #Method to update the Q-Table.
     def update(self, state, action, q_value):
         #Get row and column for Q-Table.
-        row = self.q_states.get_row(state)
-        col = self.q_actions.get_col(action)
+        row = self.get_row(state)
+        col = self.get_col(action)
 
         #Check if state and action is in Q-Table.
         if row > len(self.q_table) and col > len(self.q_table[0]):
@@ -48,6 +48,10 @@ class Q_Table:
 
         #Update Q-Table.
         self.q_table[row, col] = q_value
+
+    #Method to get Q-Value from Q-Table.
+    def get_value(self, state, action):
+        return self.q_table[self.get_row(state), self.get_col(action)]
 
     #Method to convert Q-Table to csv file.
     def to_CSV(self):

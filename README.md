@@ -1,5 +1,13 @@
 # Reinforcement Learning AI for Pokémon
 
+## To-do
+AiPlayer
+Q_Learning
+Reward
+Team_Builder
+
+## Links
+
 https://poke-env.readthedocs.io/en/latest/using_custom_teambuilder.html#using-custom-teambuilder
 
 https://www.smogon.com/forums/threads/

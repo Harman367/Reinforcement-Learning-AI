@@ -13,5 +13,5 @@ class Q_Learning:
     gamma = 0.6
     epsilon = 0.1   #Whether to choose a random action.
 
-    def selectAction(actions):
+    def select_action(actions):
         pass

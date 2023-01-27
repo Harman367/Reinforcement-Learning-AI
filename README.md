@@ -1,10 +1,11 @@
 # Reinforcement Learning AI for Pokémon
 
 ## To-do
-AiPlayer
-Q_Learning
-Reward
-Team_Builder
+* Q_Table: get_value needs to be expanded.
+* AiPlayer
+* Q_Learning
+* Reward
+* Team_Builder
 
 ## Links
 

@@ -1,9 +1,18 @@
 #Imports
-import numpy as np
+import json
+import random
 
- #Create Q-Table
-x = np.zeros((0,0))
+with open('Environment/Pokemon.json', 'r') as data:
+    #Source: "https://github.com/Honko/pokemon-team-generator/blob/master/js/data/smogon-sets/dpp_ou.js",
+    data = json.load(data)
 
-print(len(x))
+#for pokemon in data:
+#    print(data[pokemon])
 
-x.resize((3,3))
+#print(data['Abomasnow'][0])
+
+#for key in random.choice(data['Abomasnow']):
+#    if key in ["moves", "item", "ability", "nature"]:
+#        print(key)
+
+print(random.choice(data['Abomasnow'][0]["moves"])[0])

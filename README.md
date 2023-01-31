@@ -7,6 +7,11 @@
 * Reward
 * Team_Builder
 
+
+## Poke env changes
+
+* player_network_interface.py: line 173: print(message)
+
 ## Links
 
 https://poke-env.readthedocs.io/en/latest/using_custom_teambuilder.html#using-custom-teambuilder

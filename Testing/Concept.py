@@ -3,16 +3,26 @@ import time
 import random
 from typing import List
 import orjson
+import msg_parse
 
 from poke_env.player import Player, RandomPlayer
 from poke_env.player.battle_order import BattleOrder
 
 
-class MaxDamagePlayer(Player):
+class TestPlayer(Player):
 
     msg_turn = None
     msg_state = []
     msg_win = "continue"
+
+    #Current pokemon
+    current_pokemon = ""
+    opposing_pokemon = ""
+    move = ""
+    current_hp = 0
+    opposing_hp = 0
+    previous_hp = 0
+    pre_opposing_hp = 0
 
     def choose_move(self, battle):
 
@@ -20,8 +30,8 @@ class MaxDamagePlayer(Player):
             #print("Test")
         print("Choose Move!!!")
         #print(self.msg_turn)
-        print(self.msg_state)
-        self.msg_state = []
+        #print(self.msg_state)
+        #self.msg_state = []
         #print(self.msg_win)
         
         # If the player can attack, it will
@@ -46,6 +56,9 @@ class MaxDamagePlayer(Player):
         :param split_message: The received battle message.
         :type split_message: str
         """
+
+        self.msg_state = []
+
         # Battle messages can be multiline
         if (
             len(split_messages) > 1
@@ -71,8 +84,8 @@ class MaxDamagePlayer(Player):
                         battle.move_on_next_request = False
             elif split_message[1] == "win" or split_message[1] == "tie":
                 #print(split_message)
-                print("Final Turn")
-                print(self.msg_state)
+                #print("Final Turn")
+                #print(self.msg_state)
                 self.msg_win = split_message
                 if split_message[1] == "win":
                     battle._won_by(split_message[2])
@@ -154,19 +167,35 @@ class MaxDamagePlayer(Player):
             elif split_message[1] == "bigerror":
                 self.logger.warning("Received 'bigerror' message: %s", split_message)
             else:
-                #print(split_message)
+                print(split_message)
                 self.msg_state.append(split_message)
+                #msg_parse.msg_parse(split_message)
                 battle._parse_message(split_message)
 
+        #msg_parse
+        msg_parse.msg_parse(self, self.msg_state)
+
+
+class MaxDamagePlayer(Player):
+    def choose_move(self, battle):
+        # If the player can attack, it will
+        if battle.available_moves:
+            # Finds the best move among available ones
+            best_move = max(battle.available_moves, key=lambda move: move.base_power)
+            return self.create_order(best_move)
+
+        # If no attack is available, a random switch will be made
+        else:
+            return self.choose_random_move(battle)
 
 async def main():
     start = time.time()
 
     # We create two players.
-    random_player = RandomPlayer(
+    random_player = MaxDamagePlayer(
         battle_format="gen8randombattle",
     )
-    max_damage_player = MaxDamagePlayer(
+    max_damage_player = TestPlayer(
         battle_format="gen8randombattle",
     )
 

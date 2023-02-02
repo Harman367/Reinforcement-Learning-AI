@@ -4,7 +4,7 @@ from Concept import TestPlayer
 
 #Make into class
 
-def msg_parse(player: TestPlayer, split_message: list) -> None:
+def msg_parse(player: TestPlayer, split_message: list):
 
     #Loop through message
     for msg in split_message:
@@ -49,13 +49,14 @@ def msg_parse(player: TestPlayer, split_message: list) -> None:
                 
             elif msg[2][0:2] == "p2":
                 player.opposing_pokemon = msg[2].split(" ")[1]
+                player.pre_opposing_hp = player.opposing_hp
                 player.opposing_hp = hp
 
     #State
     state = player.current_pokemon + "_" + player.opposing_pokemon
    
     #print("p2 " + str(opposing_pokemon) + " hp lost:" + str(-(pre_opposing_hp - opposing_hp)))
-    #reward = -(previous_hp - current_hp) + (pre_opposing_hp - opposing_hp)
+    reward = -(player.previous_hp - player.current_hp) + (player.pre_opposing_hp - player.opposing_hp)
     #print(state + str(reward))
 
 '''

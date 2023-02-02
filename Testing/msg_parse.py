@@ -58,6 +58,8 @@ def msg_parse(player: TestPlayer, split_message: list):
     #print("p2 " + str(opposing_pokemon) + " hp lost:" + str(-(pre_opposing_hp - opposing_hp)))
     reward = -(player.previous_hp - player.current_hp) + (player.pre_opposing_hp - player.opposing_hp)
     #print(state + str(reward))
+    
+    return reward
 
 '''
     if split_message[1] in ["drag", "switch"]:

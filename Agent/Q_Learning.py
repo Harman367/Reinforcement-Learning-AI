@@ -53,9 +53,9 @@ class Q_Learning:
                 return action
 
     #Method to calculate reward (Q-Value)
-    def get_reward(self):
-        pass            
+    def get_reward(self, msg):
+        return msg_parse(msg)            
 
     #Method to update Q-table
-    def update_table(self):
-        pass
+    def update_table(self, state, action, msg):
+        self.q_tables.update(state, action, get_reward(msg))

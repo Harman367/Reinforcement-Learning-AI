@@ -213,10 +213,10 @@ async def main():
     )
 
     # Now, let's evaluate our player
-    await test_player.battle_against(max_damage_player, n_battles=1)
+    await test_player.battle_against(max_damage_player, n_battles=100)
 
     print(
-        "Test player won %d / 1 battles [this took %f seconds]"
+        "Test player won %d / 100 battles [this took %f seconds]"
         % (
             test_player.n_won_battles, time.time() - start
         )

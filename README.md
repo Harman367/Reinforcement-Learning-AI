@@ -31,6 +31,14 @@ https://numpy.org/doc/stable/reference/generated/numpy.expand_dims.html
 
 https://stackoverflow.com/questions/3389574/check-if-multiple-strings-exist-in-another-string
 
+
+
+https://blog.floydhub.com/an-introduction-to-q-learning-reinforcement-learning/
+
+https://www.freecodecamp.org/news/an-introduction-to-q-learning-reinforcement-learning-14ac0b4493cc/
+
+https://towardsdatascience.com/a-beginners-guide-to-q-learning-c3e2a30a653c
+
 ## Setup
 
 ## Implementation

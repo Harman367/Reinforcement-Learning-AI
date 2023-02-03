@@ -4,12 +4,15 @@ import random
 from typing import List
 import orjson
 import msg_parse
+import Q_Learning
 
 from poke_env.player import Player, RandomPlayer
 from poke_env.player.battle_order import BattleOrder
 
 
 class TestPlayer(Player):
+
+    q_learning = Q_Learning.Q_Learning()
 
     msg_turn = None
     msg_state = []
@@ -18,11 +21,15 @@ class TestPlayer(Player):
     #Current pokemon
     current_pokemon = ""
     opposing_pokemon = ""
-    move = ""
+    move = "Test"
     current_hp = 0
     opposing_hp = 0
     previous_hp = 0
     pre_opposing_hp = 0
+
+    state = None
+    action = None
+    skip = True
 
     def choose_move(self, battle):
 
@@ -36,13 +43,9 @@ class TestPlayer(Player):
         
         # If the player can attack, it will
         if battle.available_moves:
-            # Finds the best move among available ones
-            available_orders = [BattleOrder(move) for move in battle.available_moves]
-            available_orders.extend(
-                [BattleOrder(switch) for switch in battle.available_switches]
-            )
-
-            return available_orders[int(random.random() * len(available_orders))]
+            #self.state = battle.active_pokemon._species + "_" + battle.opponent_active_pokemon._species
+            act = self.q_learning.select_action(self.state, battle.available_moves)
+            return self.create_order(act)
 
         # If no attack is available, a random switch will be made
         else:
@@ -169,11 +172,21 @@ class TestPlayer(Player):
             else:
                 print(split_message)
                 self.msg_state.append(split_message)
+                self.skip = False
                 #msg_parse.msg_parse(split_message)
                 battle._parse_message(split_message)
 
-        #msg_parse
-        msg_parse.msg_parse(self, self.msg_state)
+        #msg_parse.msg_parse(self, self.msg_state)
+
+        if self.skip is False:
+            self.skip = True
+            
+
+            #if self.action is not None and self.state is not None:
+            
+         #msg_parse
+            #print("Test")
+            self.q_learning.update_table(self, self.state, self.move, self.msg_state)
 
 
 class MaxDamagePlayer(Player):
@@ -192,26 +205,28 @@ async def main():
     start = time.time()
 
     # We create two players.
-    random_player = MaxDamagePlayer(
+    max_damage_player = MaxDamagePlayer(
         battle_format="gen8randombattle",
     )
-    max_damage_player = TestPlayer(
+    test_player = TestPlayer(
         battle_format="gen8randombattle",
     )
 
     # Now, let's evaluate our player
-    await max_damage_player.battle_against(random_player, n_battles=1)
+    await test_player.battle_against(max_damage_player, n_battles=1)
 
     print(
-        "Max damage player won %d / 100 battles [this took %f seconds]"
+        "Test player won %d / 1 battles [this took %f seconds]"
         % (
-            max_damage_player.n_won_battles, time.time() - start
+            test_player.n_won_battles, time.time() - start
         )
     )
 
     #for k, v in max_damage_player.battles.items():
         #print(k, v)
         #print(v._replay_data)
+
+    test_player.q_learning.q_table.to_CSV()
 
 
 if __name__ == "__main__":

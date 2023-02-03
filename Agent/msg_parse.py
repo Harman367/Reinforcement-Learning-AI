@@ -13,7 +13,7 @@ def msg_parse(player: TestPlayer, split_message: list):
         if msg[1] == "move":
             if msg[2][0:2] == "p1":
                 player.current_pokemon = msg[2].split(": ")[1]
-                move = msg[3]
+                player.move = msg[3]
             elif msg[2][0:2] == "p2":
                 player.opposing_pokemon = msg[2].split(": ")[1]
 
@@ -22,7 +22,7 @@ def msg_parse(player: TestPlayer, split_message: list):
 
             if msg[3][0:1] == "0":
                 hp = 0
-                print("Fainted")
+                #print("Fainted")
             else:
                 hp = int(msg[3].split("/")[0])
 
@@ -53,12 +53,12 @@ def msg_parse(player: TestPlayer, split_message: list):
                 player.opposing_hp = hp
 
     #State
-    state = player.current_pokemon + "_" + player.opposing_pokemon
+    player.state = player.current_pokemon + "_" + player.opposing_pokemon
    
     #print("p2 " + str(opposing_pokemon) + " hp lost:" + str(-(pre_opposing_hp - opposing_hp)))
     reward = -(player.previous_hp - player.current_hp) + (player.pre_opposing_hp - player.opposing_hp)
     #print(state + str(reward))
-    
+    #print("Reward: " + str(reward))
     return reward
 
 '''

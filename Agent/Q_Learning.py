@@ -2,6 +2,7 @@
 import numpy as np
 import Q_Table
 import random
+import msg_parse
 
 #Class to implement Q-learning.
 class Q_Learning:
@@ -25,37 +26,38 @@ class Q_Learning:
             return random.choice(actions)
 
         else:
-            #Action to select.
-            action = self.q_table.get_value(state, actions[0])
-
             #Store state-action pair not explored.
             zero_values = []
+
+            moves = {}
 
             #Loop for best action for given state.
             for action in actions:
                 #Q-value
-                q_value = self.q_table.get_value(state, action)
+                q_value = self.q_table.get_value(state, action._id)
+
+                moves[action] = q_value
 
                 #Check if any Q-value is 0.
                 if q_value == 0:
                     zero_values.append(action)
 
-                else:
-                    #Find highest Q-value.
-                    if action < q_value:
-                        action = q_value
 
             #Check for any 0 actions.
             if len(zero_values) != 0:
-                return random.choice(zero_values)   #Only for training!!!!!!!!!!
+                move = random.choice(zero_values)
+                print("Move choosen: " + move._id)
+                return move   #Only for training!!!!!!!!!!
 
             else:
-                return action
+                move = max(moves, key = moves.get)
+                print("Move choosen: " + move._id)
+                return move
 
     #Method to calculate reward (Q-Value)
-    def get_reward(self, msg):
-        return msg_parse(msg)            
+    def get_reward(self, player, msg):
+        return msg_parse.msg_parse(player, msg)            
 
     #Method to update Q-table
-    def update_table(self, state, action, msg):
-        self.q_tables.update(state, action, get_reward(msg))
+    def update_table(self, player, state, action, msg):
+        self.q_table.update(state, action, self.get_reward(player, msg))

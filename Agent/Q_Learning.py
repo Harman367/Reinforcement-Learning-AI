@@ -35,6 +35,7 @@ class Q_Learning:
             for action in actions:
                 #Q-value
                 q_value = self.q_table.get_value(state, action._id)
+                #print(action._id)
 
                 moves[action] = q_value
 
@@ -46,12 +47,12 @@ class Q_Learning:
             #Check for any 0 actions.
             if len(zero_values) != 0:
                 move = random.choice(zero_values)
-                print("Move choosen: " + move._id)
+                #print("Move choosen: " + move._id)
                 return move   #Only for training!!!!!!!!!!
 
             else:
                 move = max(moves, key = moves.get)
-                print("Move choosen: " + move._id)
+                #print("Move choosen: " + move._id)
                 return move
 
     #Method to calculate reward (Q-Value)
@@ -61,3 +62,7 @@ class Q_Learning:
     #Method to update Q-table
     def update_table(self, player, state, action, msg):
         self.q_table.update(state, action, self.get_reward(player, msg))
+
+    #Method to update Q-table
+    def update_table(self, state, action, reward):
+        self.q_table.update(state, action, reward)

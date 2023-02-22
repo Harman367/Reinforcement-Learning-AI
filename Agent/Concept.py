@@ -14,14 +14,14 @@ class TestPlayer(Player):
 
     q_learning = Q_Learning.Q_Learning()
 
-    msg_turn = None
+    msg_turn = 0
     msg_state = []
     msg_win = "continue"
 
     #Current pokemon
-    current_pokemon = ""
-    opposing_pokemon = ""
-    move = "Test"
+    current_pokemon = "CurrentPokemon"
+    opposing_pokemon = "OpposingPokemon"
+    move = None
     current_hp = 0
     opposing_hp = 0
     previous_hp = 0
@@ -35,7 +35,7 @@ class TestPlayer(Player):
 
         #if battle._turn == 1:
             #print("Test")
-        print("Choose Move!!!")
+        #print("Choose Move!!!")
         #print(self.msg_turn)
         #print(self.msg_state)
         #self.msg_state = []
@@ -43,7 +43,7 @@ class TestPlayer(Player):
         
         # If the player can attack, it will
         if battle.available_moves:
-            #self.state = battle.active_pokemon._species + "_" + battle.opponent_active_pokemon._species
+            self.state = (battle.active_pokemon._species + "_" + battle.opponent_active_pokemon._species).lower()
             act = self.q_learning.select_action(self.state, battle.available_moves)
             return self.create_order(act)
 
@@ -159,9 +159,11 @@ class TestPlayer(Player):
                 else:
                     self.logger.critical("Unexpected error message: %s", split_message)
             elif split_message[1] == "turn":
-                print(split_message)
+                #print("\nTurn " + str(int(split_message[2]) - 1))
+                #print(split_message)
                 #self.msg_turn = split_message
-                self.msg = split_message
+                #self.msg = split_message
+                self.msg_state.append(split_message)
                 battle._parse_message(split_message)
                 await self._handle_battle_request(battle)
             elif split_message[1] == "teampreview":
@@ -170,23 +172,23 @@ class TestPlayer(Player):
             elif split_message[1] == "bigerror":
                 self.logger.warning("Received 'bigerror' message: %s", split_message)
             else:
-                print(split_message)
+                #print(split_message)
                 self.msg_state.append(split_message)
                 self.skip = False
                 #msg_parse.msg_parse(split_message)
                 battle._parse_message(split_message)
 
-        #msg_parse.msg_parse(self, self.msg_state)
+        
 
         if self.skip is False:
             self.skip = True
             
-
+            msg_parse.msg_parse(self, self.msg_state)
             #if self.action is not None and self.state is not None:
             
-         #msg_parse
+        #msg_parse
             #print("Test")
-            self.q_learning.update_table(self, self.state, self.move, self.msg_state)
+            #self.q_learning.update_table(self, self.state, self.move, self.msg_state)
 
 
 class MaxDamagePlayer(Player):
@@ -206,17 +208,17 @@ async def main():
 
     # We create two players.
     max_damage_player = MaxDamagePlayer(
-        battle_format="gen8randombattle",
+        battle_format="gen4randombattle",
     )
     test_player = TestPlayer(
-        battle_format="gen8randombattle",
+        battle_format="gen4randombattle",
     )
 
     # Now, let's evaluate our player
-    await test_player.battle_against(max_damage_player, n_battles=100)
+    await test_player.battle_against(max_damage_player, n_battles=1)
 
     print(
-        "Test player won %d / 100 battles [this took %f seconds]"
+        "\nTest player won %d / 1 battles [this took %f seconds]"
         % (
             test_player.n_won_battles, time.time() - start
         )

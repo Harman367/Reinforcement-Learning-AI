@@ -1,16 +1,10 @@
 # Reinforcement Learning AI for Pokémon
 
 ## To-do
-* Q_Table: get_value needs to be expanded.
-* AiPlayer
-* Q_Learning
-* Reward
-* Team_Builder
 
 
 ## Poke env changes
 
-* player_network_interface.py: line 173: print(message)
 
 ## Links
 

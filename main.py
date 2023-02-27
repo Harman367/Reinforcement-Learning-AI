@@ -1,41 +1,40 @@
+#Imports
 import asyncio
 import time
-import random
-from typing import List
-import orjson
 from Modules import AI_Player, MaxDamagePlayer
 
-from poke_env.player import Player, RandomPlayer
-from poke_env.player.battle_order import BattleOrder
-
+#Main function
 async def main():
+    #Time taken to run.
     start = time.time()
 
     # We create two players.
+
+    #AI player
+    AI_player = AI_Player(
+        battle_format="gen4randombattle",
+    )
+
+    #Max damage player
     max_damage_player = MaxDamagePlayer(
         battle_format="gen4randombattle",
     )
-    test_player = AI_Player(
-        battle_format="gen4randombattle",
-    )
+    
+    #Number of battles
+    n_battles = 1
 
     # Now, let's evaluate our player
-    await test_player.battle_against(max_damage_player, n_battles=1)
+    await AI_player.battle_against(max_damage_player, n_battles=n_battles)
 
-    print(
-        "\nTest player won %d / 1 battles [this took %f seconds]"
-        % (
-            test_player.n_won_battles, time.time() - start
-        )
-    )
+    # Print the results
+    battles_won = AI_player.n_won_battles
+    time_taken = round(time.time() - start, 2) 
+    print(f"\nTest player won {battles_won} / {n_battles} battles [this took {time_taken} seconds]")
 
-    #for k, v in max_damage_player.battles.items():
-        #print(k, v)
-        #print(v._replay_data)
+    #Save the Q table
+    AI_Player.q_learning.q_table.to_CSV()
 
-    test_player.q_learning.q_table.to_CSV()
-
-
+#Run main
 if __name__ == "__main__":
     asyncio.run(main())
     #asyncio.get_event_loop().run_until_complete(main())

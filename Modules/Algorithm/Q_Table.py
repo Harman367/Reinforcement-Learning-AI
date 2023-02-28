@@ -16,6 +16,7 @@ class Q_Table:
 
     #Method to return row of state in the Q-Table.
     def get_row(self, state):
+        #Check if state is in Q-Table.
         if state in self.q_states:
             return self.q_states.index(state)
         else:
@@ -24,13 +25,11 @@ class Q_Table:
 
     #Method to return column of action in the Q-Table.
     def get_col(self, action):
-        #print(action)
+        #Check if action is in Q-Table.
         if action in self.q_actions:
             return self.q_actions.index(action)
         else:
             self.q_actions.append(action)
-            #print(self.q_actions)
-            #print(len(self.q_actions))
             return len(self.q_actions) - 1
 
     #Method to get row and column of state and action in the Q-Table.
@@ -75,12 +74,9 @@ class Q_Table:
         
         #Expand Q-Table if needed.
         self.expand_table(row, col)
-            
-        #print(self.q_table)
-        #print(row)
-        #print(col)
-        #print(len(self.q_table[0]))
-        #print(self.q_actions[1])
+
+        #print("State: " + str(state))
+        #print("Action: " + str(action) + " " + str(self.q_table[row, col]))
 
         return self.q_table[row, col]
 
@@ -91,13 +87,5 @@ class Q_Table:
         #Set column and row names.
         df.columns = self.q_actions
         df.index = self.q_states
-
-        #Print number of rows and columns.
-        #print("Number of rows: " + str(len(df.index)))
-        #print("Number of columns: " + str(len(df.columns)))
-
-        #Print number of states and actions.
-        #print("Number of states: " + str(len(self.q_states)))
-        #print("Number of actions: " + str(len(self.q_actions)))
 
         df.to_csv("Results/Q_Table.csv")

@@ -29,10 +29,10 @@ async def main():
     # Print the results
     battles_won = AI_player.n_won_battles
     time_taken = round(time.time() - start, 2) 
-    print(f"\nTest player won {battles_won} / {n_battles} battles [this took {time_taken} seconds]")
+    print(f"\nAI player won {battles_won} / {n_battles} battles [this took {time_taken} seconds]")
 
-    #Save the Q table
-    AI_Player.q_learning.q_table.to_CSV()
+    #Save the Q-table to a CSV file
+    AI_player.to_CSV()
 
 #Run main
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ from Modules.Algorithm.Q_Table import Q_Table
 class Q_Learning:
     
     #Constructor
-    def __init__(self, alpha = 0.1, gamma = 0.6, epsilon = 0.1):
+    def __init__(self, csv = None, alpha = 0.1, gamma = 0.6, epsilon = 0.1):
         #Create Q-Table
         self.q_table = Q_Table()
 
@@ -14,6 +14,7 @@ class Q_Learning:
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon   #Whether to choose a random action.
+
 
     #Methods
 

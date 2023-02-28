@@ -15,6 +15,9 @@ async def main():
         battle_format="gen4randombattle",
     )
 
+    #Load Q-table from CSV file
+    #AI_player.load("Results\Q_Table.csv")
+
     #Max damage player
     max_damage_player = MaxDamagePlayer(
         battle_format="gen4randombattle",

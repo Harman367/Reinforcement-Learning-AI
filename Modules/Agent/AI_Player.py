@@ -43,6 +43,10 @@ class AI_Player(Player):
         else:
             return self.choose_random_move(battle)
         
+    #Funtion to load the Q-table from a CSV file.
+    def load(self, csv):
+        self.q_learning.q_table.load(csv)
+        
     #Function to save the Q-table to a CSV file
     def to_CSV(self):
         self.q_learning.q_table.to_CSV()

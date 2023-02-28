@@ -89,3 +89,20 @@ class Q_Table:
         df.index = self.q_states
 
         df.to_csv("Results/Q_Table.csv")
+
+    #Method to load Q-Table from csv file.
+    def load(self, csv):
+        #Load csv file.
+        df = pd.read_csv(csv, index_col = 0)
+
+        #Get column and row names.
+        self.q_actions = df.columns.values.tolist()
+        self.q_states = df.index.values.tolist()
+
+        #print(self.q_actions)
+        #print(self.q_states)
+
+        #Convert to numpy array.
+        self.q_table = df.to_numpy()
+
+        #print(self.q_table)

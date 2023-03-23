@@ -2,42 +2,99 @@
 from typing import List
 import orjson
 from Modules.Algorithm.Q_Learning import Q_Learning
+from Modules.Algorithm.Double_Q_Learning import Double_Q_Learning
 from Modules.Algorithm.Reward import get_reward
 from poke_env.player import Player
 
 #AI_Player
 class AI_Player(Player):
 
-    #Setup Q-Learning
-    q_learning = Q_Learning()
+    #Constructor
+    def __init__(self, use_double, table_type, csv=None, **kwargs):
+        super().__init__(**kwargs)
 
-    #Array to store the state of the battle
-    msg_state = []
+        #Pokemon types
+        self.pokemon_types = {}
 
-    #Current pokemon in play. Used to check if the pokemon has changed.
-    current_pokemon = "CurrentPokemon"
-    opposing_pokemon = "OpposingPokemon"
-    state = None
+        #Move types
+        self.move_types = {}
 
-    #Current pokemon hp.
-    current_hp = 0
-    opposing_hp = 0
-    previous_hp = 0
-    pre_opposing_hp = 0
+        #Table type
+        self.table_type = table_type
 
-    #Current move in play. Used to check if the move has changed.
-    move = None
+        #Setup doubele Q-Learning
+        if use_double:
+            self.q_learning = Double_Q_Learning(table_type, self.move_types)
+        else:
+            self.q_learning = Q_Learning(table_type, self.move_types)
 
-    #Skip reward calculation.
-    skip = True
+        #Table Type 0: State: Pokemon, Action: Move
+        #Table Type 1: State: Pokemon Type, Action: Move Type
+
+        #Load Q-table from CSV file
+        if csv != None:
+            if len(csv) == 1 and not use_double:
+                self.load(csv[0])
+            elif len(csv) == 2 and use_double:
+                self.load(csv[0], csv[1])
+            else:
+                raise Exception("Invalid number of CSV files.")
+
+        #Array to store the state of the battle
+        self.msg_state = []
+
+        #Current pokemon in play. Used to check if the pokemon has changed.
+        self.current_pokemon = "CurrentPokemon"
+        self.opposing_pokemon = "OpposingPokemon"
+        self.state = None
+        self.next_state = None
+        self.previous_state = None
+
+        #Current pokemon hp.
+        self.current_hp = 0
+        self.opposing_hp = 0
+        self.previous_hp = 0
+        self.pre_opposing_hp = 0
+
+        #Current move in play. Used to check if the move has changed.
+        self.move = None
+        self.act = None
+
+        #Skip reward calculation.
+        self.skip = True
+
 
     #Function to choose a move.
     def choose_move(self, battle):
+
+        #Check Q-table type.
+        if self.q_learning.table_type == 1:
+            active_types = battle.active_pokemon._species.capitalize()
+            opponent_types = battle.opponent_active_pokemon._species.capitalize()
+
+            #Check if pokemon type is in dictionary.
+            if active_types not in self.pokemon_types:
+                self.pokemon_types[active_types] = list(map(lambda value: str(value).split(" ")[0], list(battle.active_pokemon.types)))
+                #print(active_types)
+                #print(self.pokemon_types[active_types])
+
+            #Check if pokemon type is in dictionary.
+            if opponent_types not in self.pokemon_types:
+                self.pokemon_types[opponent_types] = list(map(lambda value: str(value).split(" ")[0], list(battle.opponent_active_pokemon.types)))
+                #print(opponent_types)
+                #print(self.pokemon_types[opponent_types])
+
+            #Get state
+            self.state = (self.type_to_string(self.pokemon_types[active_types]) + "_" + self.type_to_string(self.pokemon_types[opponent_types])).lower()
+
+        elif self.q_learning.table_type == 0:
+            #Get state
+            self.state = (active_types + "_" + opponent_types).lower()
+
         # If the player can attack, it will
         if battle.available_moves:
-            self.state = (battle.active_pokemon._species + "_" + battle.opponent_active_pokemon._species).lower()
-            act = self.q_learning.select_action(self.state, battle.available_moves)
-            return self.create_order(act)
+            self.act = self.q_learning.select_action(self.state, battle.available_moves)
+            return self.create_order(self.act)
 
         # If no attack is available, a random switch will be made
         else:
@@ -46,10 +103,31 @@ class AI_Player(Player):
     #Funtion to load the Q-table from a CSV file.
     def load(self, csv):
         self.q_learning.q_table.load(csv)
+
+    #Funtion to load the Q-table from a CSV file for double Q-Learning.
+    def load(self, csv1, csv2):
+        self.q_learning.A_q_table.load(csv1)
+        self.q_learning.B_q_table.load(csv2)
         
     #Function to save the Q-table to a CSV file
-    def to_CSV(self):
-        self.q_learning.q_table.to_CSV()
+    def to_CSV(self, name):
+        self.q_learning.to_CSV(name)
+
+    #Function return the accumulated reward.
+    def get_total_reward(self):
+        return self.q_learning.get_sum()
+    
+    #Function to update team.
+    def set_team(self, team):
+        self._team = team
+
+    #Function to convert Pokemon type to string.
+    def type_to_string(self, pokemon_types):
+        types = ""
+        for type in pokemon_types:
+            if type != 'None':
+                types += type + "&"
+        return types[:-1]
 
     #Function to handle the battle message.
     async def _handle_battle_message(self, split_messages: List[List[str]]) -> None:

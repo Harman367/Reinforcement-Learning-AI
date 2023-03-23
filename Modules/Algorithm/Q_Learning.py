@@ -1,19 +1,29 @@
 #Imports
 import random
 from Modules.Algorithm.Q_Table import Q_Table
+from poke_env.environment.pokemon_type import PokemonType
 
 #Class to implement Q-learning.
 class Q_Learning:
     
     #Constructor
-    def __init__(self, csv = None, alpha = 0.1, gamma = 0.6, epsilon = 0.1):
+    def __init__(self, table_type, move_type, alpha = 0.1, gamma = 0.6, epsilon = 0.1):
         #Create Q-Table
         self.q_table = Q_Table()
 
         #Hyperparameter
-        self.alpha = alpha
-        self.gamma = gamma
+        self.alpha = alpha      #Learning rate
+        self.gamma = gamma      #Discount factor
         self.epsilon = epsilon   #Whether to choose a random action.
+
+        #Table types
+        self.table_type = table_type
+
+        #Table Type 0: State: Pokemon, Action: Move
+        #Table Type 1: State: Pokemon Type, Action: Move Type
+
+        #Move types
+        self.move_types = move_type
 
 
     #Methods
@@ -33,8 +43,36 @@ class Q_Learning:
 
             #Loop for best action for given state.
             for action in actions:
-                #Get Q-value
-                q_value = self.q_table.get_value(state, action._id)
+                #Check Q-table to use.
+                if self.table_type == 0:
+                    #Get Q-value and check if hidden power is in action.
+                    if "hiddenpower" in action._id:
+                        q_value = self.q_table.get_value(state, "hiddenpower")
+                    else:
+                        q_value = self.q_table.get_value(state, action._id)
+                        #print("Check move: " + action._id)
+                
+                elif self.table_type == 1:
+                    #Get Q-value based on move type and category.
+                    #print(action)
+
+                    if str(action) == "curse (Move object)":
+                        type_name = 'GHOST'
+                        category_name = 'STATUS'
+                    else:
+                        type_name = action.type.name
+                        category_name = action.category.name
+
+                    move_info = type_name + "_" + category_name
+                    #print(move_info)
+                    q_value = self.q_table.get_value(state, move_info)
+
+                    #Check if hidden power is in action.
+                    if "hiddenpower" in action._id:
+                        self.move_types["hiddenpower"] = move_info
+                    else:
+                        #Add move info to dictionary.
+                        self.move_types[action._id] = move_info
 
                 #Update Q-value
                 moves[action] = q_value
@@ -57,5 +95,26 @@ class Q_Learning:
                 return move
 
     #Method to update Q-table
-    def update_table(self, state, action, reward):
-        self.q_table.update(state, action, reward)
+    def update_table(self, previous_state, next_state, action, reward):
+        #Get Q-value
+        current_q = self.q_table.get_value(previous_state, action)
+
+        #Get max Q-value for next state.
+        max_q = self.q_table.get_max(next_state)
+
+        #Calculate new Q-value.
+        q_value = current_q + self.alpha * (reward + (self.gamma * max_q) - current_q)
+
+        #Round Q-value.
+        q_value = round(q_value, 1)
+
+        #Update Q-Table.
+        self.q_table.update(previous_state, action, q_value)
+
+    #Function to save the Q-table to a CSV file
+    def to_CSV(self, name):
+        self.q_table.to_CSV(name)
+    
+    #Method to get sum of all Q-Values in Q-Table.
+    def get_sum(self):
+        return self.q_table.get_sum()

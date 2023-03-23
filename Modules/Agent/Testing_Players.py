@@ -2,6 +2,7 @@
 from poke_env.player import Player
 
 # This class is a player that always chooses the move that does the most damage.
+# Source: https://poke-env.readthedocs.io/en/latest/max_damage_player.html
 class MaxDamagePlayer(Player):
     def choose_move(self, battle):
         # If the player can attack, it will

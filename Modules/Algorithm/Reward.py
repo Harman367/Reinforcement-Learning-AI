@@ -6,22 +6,40 @@ from Modules.Agent import AI_Player
 
 def get_reward(player: AI_Player, split_message: list):
 
+    #Check if updating the Q-table.
     skip = False
 
+    #Check if the AI attacked first
+    atk_first = True
+
     #Loop through message
-    for msg in split_message:
+    for count, msg in enumerate(split_message):
         
         #Check if move
         if msg[1] == "move":
 
-            #Chech which player
+            #Check which player used the move
             if msg[2][0:2] == "p1":
+                
                 player.current_pokemon = msg[2].split(": ")[1]
                 player.move = re.sub('[^A-Za-z]', '', msg[3].lower().replace(" ", ""))
-                print("Move choosen: " + player.move)
+
+                #Check Q-table type.
+                if player.table_type == 1:
+                    player.current_pokemon = player.type_to_string(player.pokemon_types[player.current_pokemon])
+                    player.move = player.move_types[player.move]
+
+                #print("Move choosen: " + player.move)
+                #print("Action choosen: " + str(player.act))
 
             elif msg[2][0:2] == "p2":
                 player.opposing_pokemon = msg[2].split(": ")[1]
+
+                #Check Q-table type.
+                if player.table_type == 1:
+                    player.opposing_pokemon = player.type_to_string(player.pokemon_types[player.opposing_pokemon])
+
+                if count == 0 : atk_first = False
 
         #Check damage
         elif msg[1] in ["-damage", "-sethp"]:
@@ -29,6 +47,7 @@ def get_reward(player: AI_Player, split_message: list):
             #Check if fainted
             if msg[3][0:1] == "0":
                 hp = 0
+                #print(split_message)
             else:
                 hp = int(msg[3].split("/")[0])
 
@@ -40,6 +59,20 @@ def get_reward(player: AI_Player, split_message: list):
                 #print("Current hp: " + str(player.current_hp))
 
                 #print("p1 " + str(player.current_pokemon) + " hp lost:" + str(-(player.previous_hp - player.current_hp)))
+
+                if hp == 0 and not atk_first:
+                    #print("!!!!!!!!!!!!!Fainted before attack!!!!!!!!!!!!!")
+                    #print(f"Action that was selected: {player.act}")
+                    player.move = str(player.act)[:-14]
+                    if "hiddenpower" in player.move:
+                        player.move = "hiddenpower"
+
+                    #Check Q-table type.
+                    if player.table_type == 1:
+                        player.move = player.move_types[player.move]
+
+                    #print(player.move)
+
 
             elif msg[2][0:2] == "p2":
                 player.pre_opposing_hp = player.opposing_hp
@@ -56,6 +89,11 @@ def get_reward(player: AI_Player, split_message: list):
                 player.current_pokemon = msg[2].split(" ")[1]
                 player.previous_hp = player.current_hp
                 player.current_hp = hp
+
+                #Check Q-table type.
+                if player.table_type == 1:
+                    player.current_pokemon = player.type_to_string(player.pokemon_types[player.current_pokemon])
+
                 #print("Switch to: " + str(player.current_pokemon))
                 #print("Switch hp: " + str(player.current_hp))
                 
@@ -64,9 +102,13 @@ def get_reward(player: AI_Player, split_message: list):
                 player.pre_opposing_hp = player.opposing_hp
                 player.opposing_hp = hp
 
+                #Check Q-table type.
+                if player.table_type == 1:
+                    player.opposing_pokemon = player.type_to_string(player.pokemon_types[player.opposing_pokemon])
+
             #State
             player.state = (player.current_pokemon + "_" + player.opposing_pokemon).lower()
-            print("State: " + str(player.state))
+            #print("State: " + str(player.state))
 
         #Check ability
         elif msg[1] == "-ability":
@@ -169,6 +211,7 @@ def get_reward(player: AI_Player, split_message: list):
         #Check move cant
         elif msg[1] == "cant":
             if msg[2][0:2] == "p1":
+                #print(msg)
                 pass
             elif msg[2][0:2] == "p2":
                 pass
@@ -194,29 +237,44 @@ def get_reward(player: AI_Player, split_message: list):
             elif msg[2][0:2] == "p2":
                 pass
 
+        #Check faint
+        elif msg[1] == "faint":
+            if msg[2][0:2] == "p1":
+                pass
+            elif msg[2][0:2] == "p2":
+                pass
+
         #Ignore and skip reward calculation.
         elif msg[1] in ["init", "title", "j", "gametype", "player", "teamsize", "gen", "tier", "rule", "start"]:
             skip = True
 
         #Ignore but don't skip reward calculation.
-        elif msg[1] in ["upkeep", "faint", "-singleturn", "-start", "-enditem", "-start", "-sidestart","-activate", "-sideend",
-                         "-weather", "-anim", "-singlemove", "-endability", "-transform", "-notarget", "turn"]:
+        elif msg[1] in ["upkeep", "-singleturn", "-start", "-enditem", "-start", "-sidestart","-activate", "-sideend",
+                         "-weather", "-anim", "-singlemove", "-endability", "-transform", "-notarget", "turn", "-hint"]:
             pass
 
         #Handle
         else:
-            print(10*"!" + " Needs to be handled: " + msg[1] + " " + 10*"!")
+            print(10*"!" + "Unhandled Message Needs to be handled: " + msg[1] + " " + 10*"!")
             print(msg)
             skip = True
 
+
     #Reward
-    reward = -(player.previous_hp - player.current_hp) + (player.pre_opposing_hp - player.opposing_hp)
+    #reward = -(player.previous_hp - player.current_hp) + (player.pre_opposing_hp - player.opposing_hp)
+    reward = (player.pre_opposing_hp - player.opposing_hp)
+
+
+    #State
+    player.previous_state = player.next_state
+    player.next_state = player.state
 
     #Update Q-table
-    if player.state != None and player.move != None and not skip:
-        player.q_learning.update_table(player.state, player.move, reward)
+    if player.previous_state != None and player.move != None and not skip:
+        player.q_learning.update_table(player.previous_state, player.next_state, player.move, reward)
 
     
     #Check turn
     if split_message[-1][1] == "turn":
-        print("\nTurn: " + str(split_message[-1][2]))
+        #print("\nTurn: " + str(split_message[-1][2]))
+        pass

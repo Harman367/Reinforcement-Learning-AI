@@ -2,7 +2,7 @@
 import json
 import random
 
-with open('Environment/Pokemon.json', 'r') as data:
+with open('Modules\Environment\Pokemon.json', 'r') as data:
     #Source: "https://github.com/Honko/pokemon-team-generator/blob/master/js/data/smogon-sets/dpp_ou.js",
     data = json.load(data)
 
@@ -16,3 +16,4 @@ with open('Environment/Pokemon.json', 'r') as data:
 #        print(key)
 
 print(random.choice(data['Abomasnow'][0]["moves"])[0])
+print(len(data))

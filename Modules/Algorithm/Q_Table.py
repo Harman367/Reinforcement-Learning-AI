@@ -5,12 +5,14 @@ import pandas as pd
 #Class that implements the Q-Table.
 class Q_Table:
 
-    #Create Q-Table
-    q_table = np.zeros((2,2))
+    #Constructor
+    def __init__(self):
+        #Create Q-Table
+        self.q_table = np.zeros((2,2))
 
-    #Array to hold action and state for Q-Table.
-    q_actions = []
-    q_states = []
+        #Array to hold action and state for Q-Table.
+        self.q_actions = []
+        self.q_states = []
 
     #Methods
 
@@ -21,6 +23,7 @@ class Q_Table:
             return self.q_states.index(state)
         else:
             self.q_states.append(state)
+            #print(self.q_states)
             return len(self.q_states) - 1
 
     #Method to return column of action in the Q-Table.
@@ -59,8 +62,9 @@ class Q_Table:
         #Expand Q-Table if needed.
         self.expand_table(row, col)
 
-        print("State:" + str(state) + " Action:" + str(action))
-        print("Value:" + str(q_value) + " added to row: " + str(row) + " col: " + str(col))
+        # if np.count_nonzero(self.q_table[row, :]) > 5:
+        #     print("State:" + str(state) + " Action:" + str(action))
+        #     print("Value:" + str(q_value) + " added to row: " + str(row) + " col: " + str(col))
 
         #Update Q-Table.
         self.q_table[row, col] = q_value
@@ -75,20 +79,23 @@ class Q_Table:
         #Expand Q-Table if needed.
         self.expand_table(row, col)
 
+        #print("Row: " + str(row) + " Col: " + str(col))
+        #print("State: " + str(state) + " Action: " + str(action))
+              
         #print("State: " + str(state))
         #print("Action: " + str(action) + " " + str(self.q_table[row, col]))
 
         return self.q_table[row, col]
 
     #Method to convert Q-Table to csv file.
-    def to_CSV(self):
+    def to_CSV(self, name):
         df = pd.DataFrame(self.q_table)
 
         #Set column and row names.
         df.columns = self.q_actions
         df.index = self.q_states
 
-        df.to_csv("Results/Q_Table.csv")
+        df.to_csv(f"Results/{name}.csv")
 
     #Method to load Q-Table from csv file.
     def load(self, csv):
@@ -106,3 +113,23 @@ class Q_Table:
         self.q_table = df.to_numpy()
 
         #print(self.q_table)
+
+    #Method to get sum of all Q-Values in Q-Table.
+    def get_sum(self):
+        return round(np.sum(self.q_table), 1)
+
+    #Method to get the highest Q-Value in the Q-Table, given a state.
+    def get_max(self, state):
+        #Get row of state.
+        row = self.get_row(state)
+
+        #Get max Q-Value.
+        return np.max(self.q_table[row])
+    
+    #Method to get the column of the highest Q-Value in the Q-Table, given a state.
+    def get_arg_max(self, state):
+        #Get row of state.
+        row = self.get_row(state)
+
+        #Get action of max Q-Value.
+        return self.q_actions[np.argmax(self.q_table[row])]

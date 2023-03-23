@@ -1,4 +1,5 @@
 # Reinforcement Learning AI for Pokémon
+https://www.smogon.com/rmt/archive/dpp
 
 ## To-do
 

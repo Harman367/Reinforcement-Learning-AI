@@ -2,23 +2,33 @@
 import asyncio
 import time
 import json
-from Modules import AI_Player, MaxDamagePlayer, Team_Builder, format_JSON, load_team
+import random
+from random import randrange
+from Modules import AI_Player, MaxDamagePlayer, Team_Builder, create_random_teams, load_team
 from poke_env.player import RandomPlayer
 
 #Create Teams
-#team_1, team_2 = format_JSON()
-team_1, team_2 = load_team()
+#create_random_teams(5, "Teams")
+teams = load_team("Teams.json")
 
 #Create Team Builders
-custom_builder1 = Team_Builder(team_1)
-custom_builder2 = Team_Builder(team_2)
+team_builder = []
+for team in teams:
+    team_builder.append(Team_Builder(team))
+random.shuffle(team_builder)
 
 #Store Results
-results_max = []
-results_random = []
-results_self = []
+reward_s0 = []
+reward_s1 = []
+reward_d0 = []
+reward_d1 = []
+rewards = [reward_s0, reward_s1, reward_d0, reward_d1]
 
-acuumulated_reward = []
+win_s0 = []
+win_s1 = []
+win_d0 = []
+win_d1 = []
+wins = [win_s0, win_s1, win_d0, win_d1]
 
 #Function to save results JSON
 def save_results(results, name):
@@ -31,7 +41,7 @@ def save_results(results, name):
     #Write to JSON file.
     json_results = json.dumps(results_json)
 
-    with open(f'Results\{name}.json', 'w') as file:
+    with open(f'Results/JSON/{name}.json', 'w') as file:
         file.write(json_results)
 
 #Main function
@@ -42,84 +52,105 @@ async def main():
     #Create players.
 
     #AI player
-    AI = AI_Player(
+    AI_s0 = AI_Player(
+        use_double=False,
+        table_type=0,
+        #csv="Results\Test.csv",
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+    )
+
+    AI_s1 = AI_Player(
         use_double=False,
         table_type=1,
         #csv="Results\Test.csv",
         battle_format="gen4anythinggoes",
-        team=custom_builder1,
+        team=team_builder[randrange(len(team_builder))],
+    )
+
+    AI_d0 = AI_Player(
+        use_double=True,
+        table_type=0,
+        #csv="Results\Test.csv",
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+    )
+
+    AI_d1 = AI_Player(
+        use_double=True,
+        table_type=1,
+        #csv="Results\Test.csv",
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
     )
 
     #Max damage player
     max_damage_player = MaxDamagePlayer(
         battle_format="gen4anythinggoes",
-        team=custom_builder1,
+        team=team_builder[randrange(len(team_builder))],
     )
 
     #Random player
     random_player = RandomPlayer(
         battle_format="gen4anythinggoes",
-        team=custom_builder1,
+        team=team_builder[randrange(len(team_builder))],
     )
 
-    #Self play
-    # AI_self = AI_Player(
-    #     csv="Results\Q_Table.csv",
-    #     battle_format="gen4anythinggoes",
-    #     team=custom_builder1,
-    # )
-    
+    #Store AI players
+    AI_players = [AI_s0, AI_s1, AI_d0, AI_d1]
+
     #Number of battles
-    n_battles = 100
+    n_battles = 2500
 
     #Number of battels won
     previous_wins = 0
 
     #Evaluate the AI player
-    for _ in range(1, n_battles + 1):
-        #Battle against max damage player
-        await AI.battle_against(max_damage_player, n_battles=1)
-        results_max.append(AI.get_total_reward())
-        #acuumulated_reward.append(AI.get_total_reward())
+    for i, AI in enumerate(AI_players):
+        for _ in range(1, n_battles + 1):
+            #Battle against max damage player
+            await AI.battle_against(max_damage_player, n_battles=1)
+            rewards[i].append(AI.get_total_reward())
 
-        #Battle against random player
-        #await AI.battle_against(random_player, n_battles=1)
-        #results_random.append(AI.get_total_reward())
+            #Battle against random player
+            await AI.battle_against(random_player, n_battles=1)
+            rewards[i].append(AI.get_total_reward())
 
-        #Self play
-        #await AI.battle_against(AI_self, n_battles=1)
-        #results_self.append(AI.get_total_reward())
 
-        #AI.set_team(custom_builder2)
+            AI.set_team(team_builder[randrange(len(team_builder))])
+            max_damage_player._team = team_builder[randrange(len(team_builder))]
+            random_player._team = team_builder[randrange(len(team_builder))]
 
-        if _ % (n_battles / 10) == 0:
-            print(f"Battle {_} finished")
-            new_wins = AI.n_won_battles - previous_wins
-            previous_wins = AI.n_won_battles
-            #print(f"AI won {new_wins}")
-            #results_max.append(new_wins)
-            #results_random.append(new_wins)
-            #results_self.append(new_wins)
-            
+            if _ % (n_battles / 100) == 0:
+                print(f"Battle {_} finished")
+                new_wins = AI.n_won_battles - previous_wins
+                previous_wins = AI.n_won_battles
+                wins[i].append(new_wins)
 
+        # Print the results
+        battles_won = AI.n_won_battles
+        time_taken = round(time.time() - start, 2) 
+        print(f"\nAI player won {battles_won} / {n_battles * 2} battles [this took {time_taken} seconds]")
         
-    #AI.reset_battles()
+        AI.reset_battles()
 
-    # Print the results
-    battles_won = AI.n_won_battles
-    time_taken = round(time.time() - start, 2) 
-    print(f"\nAI player won {battles_won} / {n_battles * 1} battles [this took {time_taken} seconds]")
-
-    #print(AI.q_learning.q_table.q_table[0:2])
 
     #Save the Q-table to a CSV file
-    AI.to_CSV("Test")
+    AI_s0.to_CSV("s0")
+    AI_s1.to_CSV("s1")
+    AI_d0.to_CSV("d0")
+    AI_d1.to_CSV("d1")
 
     #Save results to a JSON file
-    save_results(results_max, "VS Max Damage Player")
-    #save_results(results_random, "VS Random Player")
-    #save_results(results_self, "Self Play")
-    #save_results(acuumulated_reward, "Accumulated Reward")
+    save_results(reward_s0, "Reward Single Q-Learning Type 0")
+    save_results(reward_s1, "Reward Single Q-Learning Type 1")
+    save_results(reward_d0, "Reward Double Q-Learning Type 0")
+    save_results(reward_d1, "Reward Double Q-Learning Type 1")
+
+    save_results(win_s0, "Wins Single Q-Learning Type 0")
+    save_results(win_s1, "Wins Single Q-Learning Type 1")
+    save_results(win_d0, "Wins Double Q-Learning Type 0")
+    save_results(win_d1, "Wins Double Q-Learning Type 1")
 
 #Run main
 if __name__ == "__main__":

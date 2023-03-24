@@ -12,9 +12,23 @@ def get_reward(player: AI_Player, split_message: list):
     #Check if the AI attacked first
     atk_first = True
 
+    #Reward
+    reward = 0
+
+    #Resisted damage
+    resisted = False
+    opponent_resisted = False
+
+    #Super effective damage
+    super_effective = False
+    opponent_super_effective = False
+
+    #Critical hit
+    critical = False
+    opponent_critical = False
+
     #Loop through message
     for count, msg in enumerate(split_message):
-        
         #Check if move
         if msg[1] == "move":
 
@@ -42,7 +56,7 @@ def get_reward(player: AI_Player, split_message: list):
                 if count == 0 : atk_first = False
 
         #Check damage
-        elif msg[1] in ["-damage", "-sethp"]:
+        elif msg[1] in ["-damage", "-sethp", "-heal"]:
 
             #Check if fainted
             if msg[3][0:1] == "0":
@@ -72,11 +86,14 @@ def get_reward(player: AI_Player, split_message: list):
                         player.move = player.move_types[player.move]
 
                     #print(player.move)
-
+                    reward -= 50
 
             elif msg[2][0:2] == "p2":
                 player.pre_opposing_hp = player.opposing_hp
                 player.opposing_hp = hp
+
+                if hp == 0 and atk_first:
+                    reward += 50
 
                 #print("p2 " + str(player.opposing_pokemon) + " hp lost:" + str(-(player.pre_opposing_hp - player.opposing_hp)))
 
@@ -113,85 +130,65 @@ def get_reward(player: AI_Player, split_message: list):
         #Check ability
         elif msg[1] == "-ability":
             if msg[2][0:2] == "p1":
-                pass
+                reward += 10
             elif msg[2][0:2] == "p2":
-                pass
+                reward -= 10
 
         #Check boost
         elif msg[1] == "-boost":
             if msg[2][0:2] == "p1":
-                pass
+                reward += int(msg[-1]) * 10
             elif msg[2][0:2] == "p2":
-                pass
-
-            if msg[-2] in ["atk", "def", "spd", "spe", "spa"]:
-                pass
-            else:
-                print(10*"!" + " Needs to be handled: " + msg[-2] + 10*"!")
-                print(msg)
+                reward -= int(msg[-1]) * 10
 
         #Check unboost
         elif msg[1] == "-unboost":
             if msg[2][0:2] == "p1":
-                pass
+                reward -= int(msg[-1]) * 5
             elif msg[2][0:2] == "p2":
-                pass
-
-
-            if msg[-2] in ["atk", "def", "spd", "spe", "spa"]:
-                pass
-            else:
-                print(10*"!" + " Needs to be handled: " + msg[-2] + 10*"!")
-                print(msg)
+                reward += int(msg[-1]) * 5
 
         #Check move resistance
         elif msg[1] == "-resisted":
-            if msg[1][0:2] == "p1":
-                pass
-            elif msg[1][0:2] == "p2":
-                pass
+            if msg[2][0:2] == "p1":
+                resisted = True
+            elif msg[2][0:2] == "p2":
+                opponent_resisted = True
 
         #Check move effectiveness
         elif msg[1] == "-supereffective":
             if msg[1][0:2] == "p1":
-                pass
+                super_effective = True
             elif msg[1][0:2] == "p2":
-                pass
+                opponent_super_effective = True
 
         #Check move immunity
         elif msg[1] == "-immune":
             if msg[1][0:2] == "p1":
-                pass
+                reward += player.current_hp
             elif msg[1][0:2] == "p2":
-                pass
+                reward -= player.opposing_hp
 
         #Check move critical hit.
         elif msg[1] == "-crit":
             if msg[1][0:2] == "p1":
-                pass
+                critical = True
             elif msg[1][0:2] == "p2":
-                pass
+                opponent_critical = True
 
         #Check move miss.
         elif msg[1] == "-miss":
             if msg[2][0:2] == "p1":
-                pass
+                reward -= player.opposing_hp
             elif msg[2][0:2] == "p2":
-                pass
-
-        #Check move heal.
-        elif msg[1] == "-heal":
-            if msg[2][0:2] == "p1":
-                pass
-            elif msg[2][0:2] == "p2":
-                pass
+                reward += player.current_hp
 
         #Check status effect.
         elif msg[1] == "-status":
             if msg[2][0:2] == "p1":
-                pass
+                reward -= 25
             elif msg[2][0:2] == "p2":
-                pass
+                reward += 25
 
         #Check start of effect.
         elif msg[1] == "-start":
@@ -199,7 +196,6 @@ def get_reward(player: AI_Player, split_message: list):
                 pass
             elif msg[2][0:2] == "p2":
                 pass
-
 
         #Check end of effect.
         elif msg[1] == "-end":
@@ -250,7 +246,8 @@ def get_reward(player: AI_Player, split_message: list):
 
         #Ignore but don't skip reward calculation.
         elif msg[1] in ["upkeep", "-singleturn", "-start", "-enditem", "-start", "-sidestart","-activate", "-sideend",
-                         "-weather", "-anim", "-singlemove", "-endability", "-transform", "-notarget", "turn", "-hint"]:
+                         "-weather", "-anim", "-singlemove", "-endability", "-transform", "-notarget", "turn", "-hint",
+                         "-item", '-clearallboost', '-cureteam']:
             pass
 
         #Handle
@@ -260,10 +257,40 @@ def get_reward(player: AI_Player, split_message: list):
             skip = True
 
 
-    #Reward
-    #reward = -(player.previous_hp - player.current_hp) + (player.pre_opposing_hp - player.opposing_hp)
-    reward = (player.pre_opposing_hp - player.opposing_hp)
+    #Rewards
 
+    #Reward for damage dealt.
+    reward += (player.pre_opposing_hp - player.opposing_hp)
+
+    #Reward for damage taken.
+    reward += (player.current_hp - player.previous_hp)
+
+    #Reward for attacking first.
+    if atk_first:
+        reward += 50
+    elif not atk_first:
+        reward -= 50
+
+    #Reward for resisting.
+    if resisted:
+        reward += (player.previous_hp - player.current_hp) * 0.5
+
+    if opponent_resisted:
+        reward -= (player.pre_opposing_hp - player.opposing_hp) * 0.5
+
+    #Reward for super effective.
+    if super_effective:
+        reward -= (player.previous_hp - player.current_hp) * 0.5
+
+    if opponent_super_effective:
+        reward += (player.pre_opposing_hp - player.opposing_hp) * 0.5
+
+    #Reward for critical hit.
+    if critical:
+        reward -= (player.previous_hp - player.current_hp) * 0.5
+
+    if opponent_critical:
+        reward += (player.pre_opposing_hp - player.opposing_hp) * 0.5
 
     #State
     player.previous_state = player.next_state

@@ -89,7 +89,7 @@ class AI_Player(Player):
 
         elif self.q_learning.table_type == 0:
             #Get state
-            self.state = (active_types + "_" + opponent_types).lower()
+            self.state = (battle.active_pokemon._species + "_" + battle.opponent_active_pokemon._species).lower()
 
         # If the player can attack, it will
         if battle.available_moves:

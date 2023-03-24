@@ -1,7 +1,6 @@
 #Imports
 import random
 from Modules.Algorithm.Q_Table import Q_Table
-from poke_env.environment.pokemon_type import PokemonType
 
 #Class to implement Q-learning.
 class Q_Learning:

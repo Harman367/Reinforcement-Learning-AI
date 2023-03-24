@@ -95,7 +95,7 @@ class Q_Table:
         df.columns = self.q_actions
         df.index = self.q_states
 
-        df.to_csv(f"Results/{name}.csv")
+        df.to_csv(f"Results/CSV/{name}.csv")
 
     #Method to load Q-Table from csv file.
     def load(self, csv):

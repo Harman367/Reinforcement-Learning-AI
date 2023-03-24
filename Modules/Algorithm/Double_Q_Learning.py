@@ -1,6 +1,7 @@
 #Imports
 import random
 from Modules.Algorithm.Q_Table import Q_Table
+from Modules.Algorithm.Q_Learning import Q_Learning
 
 #Class to implement Q-learning.
 class Double_Q_Learning:
@@ -52,15 +53,26 @@ class Double_Q_Learning:
                         q_value = self.q_tables[0].get_value(state, "hiddenpower") + self.q_tables[1].get_value(state, "hiddenpower")
                     else:
                         q_value = self.q_tables[0].get_value(state, action._id) + self.q_tables[1].get_value(state, action._id)
-                        print("Check move: " + action._id)
                 
                 elif self.table_type == 1:
                     #Get Q-value based on move type and category.
-                    move_info = action._type + "_" + action._category
+
+                    if str(action) == "curse (Move object)":
+                        type_name = 'GHOST'
+                        category_name = 'STATUS'
+                    else:
+                        type_name = action.type.name
+                        category_name = action.category.name
+
+                    move_info = type_name + "_" + category_name
                     q_value = self.q_tables[0].get_value(state, move_info) + self.q_tables[1].get_value(state, move_info)
 
-                    #Add move info to dictionary.
-                    self.move_types[action._id] = move_info
+                    #Check if hidden power is in action.
+                    if "hiddenpower" in action._id:
+                        self.move_types["hiddenpower"] = move_info
+                    else:
+                        #Add move info to dictionary.
+                        self.move_types[action._id] = move_info
 
                 #Update Q-value
                 moves[action] = q_value
@@ -117,4 +129,4 @@ class Double_Q_Learning:
 
     #Function return the accumulated reward.
     def get_sum(self):
-        return [self.A_q_table.get_sum(), self.B_q_table.get_sum()]
+        return self.A_q_table.get_sum() + self.B_q_table.get_sum()

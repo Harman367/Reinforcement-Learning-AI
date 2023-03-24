@@ -14,23 +14,67 @@ class Team_Builder(Teambuilder):
     #Method to yield team.
     def yield_team(self):
         return self.team
-
-#Method to format JSON.
-def format_JSON():
+    
+#Method to create random teams
+def create_random_teams(number_of_teams, file_name):
+    #Load JSON file.
     with open('Modules\Environment\Pokemon.json', 'r') as data:
         #Source: "https://github.com/Honko/pokemon-team-generator/blob/master/js/data/smogon-sets/dpp_ou.js",
         data = json.load(data)
 
-    #Get random team.
-    team = random.sample(list(data), 6)
+    teams = []
 
-    #Create empty lists.
-    team_1 = []
-    team_2 = []
-    
+    #Loop through number of teams.
+    for i in range(number_of_teams):
+        #Get random team.
+        team = random.sample(list(data), 6)
+
+        #Add team to list.
+        teams.append(build_team(team, data))
+
+        #Create JSON file.
+        teams_json = {}
+
+        #Add teams to JSON file.
+        for i, team in enumerate(teams):
+            teams_json[f"team_{i+1}"] = team
+
+        teams_json = json.dumps(teams_json)
+
+        #Write to JSON file.
+        with open(f"Modules\Environment\{file_name}.json", "w") as outfile:
+            outfile.write(teams_json)
+
+#Method to load team.
+def load_team(file_name):
+    #Load JSON file.
+    with open(f"Modules\Environment\{file_name}", "r") as infile:
+        data = json.load(infile)
+
+    #Teams
+    teams = []
+
+    #Shuffle teams.
+    for key in data.keys():
+        #Shuffle Pokemon.
+        random.shuffle(data[key])
+
+        team = ""
+
+        #Loop through team and join Pokemon.
+        for x in data[key]:
+            team += x
+
+        teams.append(team)
+
+    return teams
+
+#Method to build a team.
+def build_team(team, data):
+    built_team = []
+
     #Loop through team.
     for pokemon in team:
-        #print("\n" + pokemon)
         name = pokemon
 
         #Get random build from list of builds.
@@ -47,31 +91,32 @@ def format_JSON():
                 if "Hidden Power" in str(m):
                     m = "Hidden Power"
 
-                
+                #Check if move is already in list.
+                if m in moves:
+                    m = random.choice(move)
+
+                    if "Hidden Power" in str(m):
+                        m = "Hidden Power"
+
                 moves.append(m)
-                #print(m)
+
             else:
                 #Check if move is Hidden Power.
                 if "Hidden Power" in str(move[0]):
                     move[0] = "Hidden Power"
                 moves.append(move[0])
-                #print(move[0])
 
         #Get random item from list of items.
         item = random.choice(build["item"])
-        #print(item)
         
         #Get random ability from list of abilities.
         ability = random.choice(build["ability"])
-        #print(ability)
 
         #Get random nature from list of natures.
         nature = random.choice(build["nature"])
-        #print(nature)
 
         #Get random EVs from list of EVs.
         evs = build["evs"]
-        #print(evs)
 
         #Format EVs.
         ev = ""
@@ -90,47 +135,7 @@ EVs: {ev}
 - {moves[2]}
 - {moves[3]}
 """
-        #Add Pokemon to team.
-        team_1.append(pokemon_build)
 
-    #Copy and shuffle team.
-    team_2 = team_1.copy()
-    random.shuffle(team_2)
+        built_team.append(pokemon_build)
 
-    #Create JSON file.
-    teams = {
-        "team_1": team_1,
-        "team_2": team_2
-    }
-    teams_json = json.dumps(teams)
-
-    #Write to JSON file.
-    with open("Modules\Environment\Teams.json", "w") as outfile:
-        outfile.write(teams_json)
-
-    #print(t1)
-    #print(t2)
-
-    return join_pokemon(team_1, team_2)
-
-#Method to load team.
-def load_team():
-    #Load JSON file.
-    with open("Modules\Environment\Teams.json", "r") as infile:
-        data = json.load(infile)
-
-    #Shuffle teams.
-    random.shuffle(data["team_1"])
-    random.shuffle(data["team_2"])
-
-    return join_pokemon(data["team_1"], data["team_2"])
-
-#Method to join Pokemon.
-def join_pokemon(team1, team2):
-    #Join Pokemon.
-    t1, t2 = "", ""
-    for x, y in zip(team1, team2):
-        t1 += x
-        t2 += y
-
-    return t1, t2
+    return built_team

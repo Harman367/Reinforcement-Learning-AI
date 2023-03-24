@@ -1,18 +1,42 @@
 {
     "team_1": [
-        "\nStaraptor @ Choice Scarf\nAbility: Intimidate\nEVs: 56 hp / 200 spe / 252 atk\nAdamant Nature\n- Brave Bird\n- Double-Edge\n- Close Combat\n- U-turn\n",
-        "\nSceptile @ Life Orb\nAbility: Overgrow\nEVs: 252 spa / 228 spe / 28 atk\nTimid Nature\n- Leaf Storm\n- Focus Blast\n- Dragon Pulse\n- Hidden Power\n",
-        "\nAggron @ Life Orb\nAbility: Rock Head\nEVs: 4 hp / 252 spe / 252 atk\nJolly Nature\n- Rock Polish\n- Head Smash\n- Earthquake\n- Aqua Tail\n",
-        "\nTogekiss @ Leftovers\nAbility: Serene Grace\nEVs: 64 spd / 252 hp / 192 spe\nCalm Nature\n- Nasty Plot\n- Baton Pass\n- Air Slash\n- Wish\n",
-        "\nSpiritomb @ Leftovers\nAbility: Pressure\nEVs: 8 def / 252 spd / 248 hp\nCareful Nature\n- Curse\n- Will-O-Wisp\n- Pursuit\n- Rest\n",
-        "\nUmbreon @ Leftovers\nAbility: Synchronize\nEVs: 128 spd / 252 hp / 128 spe\nCareful Nature\n- Baton Pass\n- Mean Look\n- Wish\n- Yawn\n"
+        "\nMilotic @ Leftovers\nAbility: Marvel Scale\nEVs: 252 def / 4 spa / 252 hp\nBold Nature\n- Surf\n- Haze\n- Hidden Power\n- Recover\n",
+        "\nGallade @ Choice Scarf\nAbility: Steadfast\nEVs: 4 hp / 252 spe / 252 atk\nAdamant Nature\n- Close Combat\n- Psycho Cut\n- Stone Edge\n- Trick\n",
+        "\nMetagross @ Expert Belt\nAbility: Clear Body\nEVs: 252 spa / 80 hp / 52 spe / 124 atk\nQuiet Nature\n- Meteor Mash\n- Psychic\n- Hidden Power\n- Grass Knot\n",
+        "\nAerodactyl @ Leftovers\nAbility: Pressure\nEVs: 28 def / 248 hp / 112 spe / 120 atk\nJolly Nature\n- Substitute\n- Roost\n- Whirlwind\n- Rock Slide\n",
+        "\nTyranitar @ Expert Belt\nAbility: Sand Stream\nEVs: 252 spa / 200 spe / 56 atk\nNaive Nature\n- Flamethrower\n- Ice Beam\n- Thunderbolt\n- Superpower\n",
+        "\nTentacruel @ Life Orb\nAbility: Clear Body\nEVs: 80 spa / 196 spe / 232 atk\nLonely Nature\n- Swords Dance\n- Waterfall\n- Poison Jab\n- Hydro Pump\n"
     ],
     "team_2": [
-        "\nSpiritomb @ Leftovers\nAbility: Pressure\nEVs: 8 def / 252 spd / 248 hp\nCareful Nature\n- Curse\n- Will-O-Wisp\n- Pursuit\n- Rest\n",
-        "\nSceptile @ Life Orb\nAbility: Overgrow\nEVs: 252 spa / 228 spe / 28 atk\nTimid Nature\n- Leaf Storm\n- Focus Blast\n- Dragon Pulse\n- Hidden Power\n",
-        "\nTogekiss @ Leftovers\nAbility: Serene Grace\nEVs: 64 spd / 252 hp / 192 spe\nCalm Nature\n- Nasty Plot\n- Baton Pass\n- Air Slash\n- Wish\n",
-        "\nAggron @ Life Orb\nAbility: Rock Head\nEVs: 4 hp / 252 spe / 252 atk\nJolly Nature\n- Rock Polish\n- Head Smash\n- Earthquake\n- Aqua Tail\n",
-        "\nUmbreon @ Leftovers\nAbility: Synchronize\nEVs: 128 spd / 252 hp / 128 spe\nCareful Nature\n- Baton Pass\n- Mean Look\n- Wish\n- Yawn\n",
-        "\nStaraptor @ Choice Scarf\nAbility: Intimidate\nEVs: 56 hp / 200 spe / 252 atk\nAdamant Nature\n- Brave Bird\n- Double-Edge\n- Close Combat\n- U-turn\n"
+        "\nJirachi @ Light Clay\nAbility: Serene Grace\nEVs: 100 def / 156 spd / 252 hp\nCareful Nature\n- Reflect\n- Light Screen\n- Wish\n- U-turn\n",
+        "\nWeavile @ Expert Belt\nAbility: Pressure\nEVs: 40 hp / 216 spe / 252 atk\nJolly Nature\n- Swords Dance\n- Night Slash\n- Ice Shard\n- Low Kick\n",
+        "\nSpiritomb @ Leftovers\nAbility: Pressure\nEVs: 148 def / 112 spd / 248 hp\nCalm Nature\n- Rest\n- Sleep Talk\n- Shadow Ball\n- Will-O-Wisp\n",
+        "\nAzelf @ Colbur Berry\nAbility: Levitate\nEVs: 144 spd / 8 hp / 216 spe / 140 atk\nJolly Nature\n- Stealth Rock\n- Taunt\n- U-turn\n- Explosion\n",
+        "\nBreloom @ Toxic Orb\nAbility: Poison Heal\nEVs: 252 def / 236 hp / 20 spe\nAdamant Nature\n- Substitute\n- Leech Seed\n- Spore\n- Focus Punch\n",
+        "\nBlissey @ Leftovers\nAbility: Natural Cure\nEVs: 252 def / 252 hp / 4 spe\nBold Nature\n- Wish\n- Soft-Boiled\n- Flamethrower\n- Toxic\n"
+    ],
+    "team_3": [
+        "\nCrobat @ Leftovers\nAbility: Inner Focus\nEVs: 56 def / 76 spd / 232 hp / 144 spe\nJolly Nature\n- Taunt\n- Roost\n- Super Fang\n- U-turn\n",
+        "\nWeavile @ Focus Sash\nAbility: Pressure\nEVs: 4 hp / 252 spe / 252 atk\nHasty Nature\n- Fake Out\n- Taunt\n- Counter\n- Ice Punch\n",
+        "\nCelebi @ Leftovers\nAbility: Natural Cure\nEVs: 252 spa / 32 hp / 224 spe\nTimid Nature\n- Leaf Storm\n- Hidden Power\n- U-turn\n- Rest\n",
+        "\nClaydol @ Leftovers\nAbility: Levitate\nEVs: 144 def / 112 spa / 252 hp\nRelaxed Nature\n- Rapid Spin\n- Stealth Rock\n- Earth Power\n- Explosion\n",
+        "\nMetagross @ Choice Band\nAbility: Clear Body\nEVs: 4 def / 252 spe / 252 atk\nAdamant Nature\n- Meteor Mash\n- Earthquake\n- Explosion\n- Trick\n",
+        "\nUmbreon @ Leftovers\nAbility: Synchronize\nEVs: 128 spd / 252 hp / 128 spe\nCareful Nature\n- Baton Pass\n- Mean Look\n- Wish\n- Protect\n"
+    ],
+    "team_4": [
+        "\nTentacruel @ Life Orb\nAbility: Clear Body\nEVs: 80 spa / 196 spe / 232 atk\nLonely Nature\n- Swords Dance\n- Waterfall\n- Poison Jab\n- Hydro Pump\n",
+        "\nTogekiss @ Leftovers\nAbility: Serene Grace\nEVs: 20 def / 252 hp / 236 spe\nTimid Nature\n- Encore\n- Wish\n- Air Slash\n- Thunder Wave\n",
+        "\nFeraligatr @ Life Orb\nAbility: Torrent\nEVs: 4 hp / 252 spe / 252 atk\nJolly Nature\n- Swords Dance\n- Waterfall\n- Aqua Jet\n- Return\n",
+        "\nMetagross @ Choice Band\nAbility: Clear Body\nEVs: 4 def / 252 spe / 252 atk\nAdamant Nature\n- Meteor Mash\n- Earthquake\n- Explosion\n- Bullet Punch\n",
+        "\nHeracross @ Flame Orb\nAbility: Guts\nEVs: 4 hp / 252 spe / 252 atk\nJolly Nature\n- Swords Dance\n- Close Combat\n- Megahorn\n- Facade\n",
+        "\nMachamp @ Leftovers\nAbility: No Guard\nEVs: 252 hp / 4 spe / 252 atk\nAdamant Nature\n- Rest\n- Sleep Talk\n- Dynamic Punch\n- Payback\n"
+    ],
+    "team_5": [
+        "\nTangrowth @ Leftovers\nAbility: Leaf Guard\nEVs: 252 def / 252 hp / 4 atk\nImpish Nature\n- Sleep Powder\n- Knock Off\n- Grass Knot\n- Earthquake\n",
+        "\nRegisteel @ Leftovers\nAbility: Clear Body\nEVs: 88 def / 252 hp / 168 atk\nImpish Nature\n- Stealth Rock\n- Explosion\n- Ice Punch\n- Toxic\n",
+        "\nMamoswine @ Focus Sash\nAbility: Snow Cloak\nEVs: 4 def / 252 spe / 252 atk\nAdamant Nature\n- Stealth Rock\n- Earthquake\n- Ice Shard\n- Endeavor\n",
+        "\nKingdra @ Choice Specs\nAbility: Sniper\nEVs: 252 spa / 32 hp / 224 spe\nTimid Nature\n- Draco Meteor\n- Hydro Pump\n- Surf\n- Dragon Pulse\n",
+        "\nBlissey @ Leftovers\nAbility: Natural Cure\nEVs: 252 def / 252 hp / 4 spe\nBold Nature\n- Aromatherapy\n- Soft-Boiled\n- Seismic Toss\n- Thunder Wave\n",
+        "\nMoltres @ Leftovers\nAbility: Pressure\nEVs: 200 def / 248 hp / 60 spe\nBold Nature\n- Substitute\n- Roost\n- Flamethrower\n- Toxic\n"
     ]
 }

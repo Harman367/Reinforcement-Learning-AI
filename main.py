@@ -46,9 +46,6 @@ def save_results(results, name):
 
 #Main function
 async def main():
-    #Time taken to run.
-    start = time.time()
-
     #Create players.
 
     #AI player
@@ -107,6 +104,9 @@ async def main():
 
     #Evaluate the AI player
     for i, AI in enumerate(AI_players):
+        #Time taken to run.
+        start = time.time()
+
         for _ in range(1, n_battles + 1):
             #Battle against max damage player
             await AI.battle_against(max_damage_player, n_battles=1)

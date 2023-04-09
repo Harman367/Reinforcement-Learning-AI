@@ -22,8 +22,11 @@ class AI_Player(Player):
         #Table type
         self.table_type = table_type
 
+        #Use double Q-learning
+        self.use_double = use_double
+
         #Setup doubele Q-Learning
-        if use_double:
+        if self.use_double:
             self.q_learning = Double_Q_Learning(table_type, self.move_types)
         else:
             self.q_learning = Q_Learning(table_type, self.move_types)
@@ -33,12 +36,7 @@ class AI_Player(Player):
 
         #Load Q-table from CSV file
         if csv != None:
-            if len(csv) == 1 and not use_double:
-                self.load(csv[0])
-            elif len(csv) == 2 and use_double:
-                self.load(csv[0], csv[1])
-            else:
-                raise Exception("Invalid number of CSV files.")
+            self.load(csv)
 
         #Array to store the state of the battle
         self.msg_state = []
@@ -102,12 +100,13 @@ class AI_Player(Player):
         
     #Funtion to load the Q-table from a CSV file.
     def load(self, csv):
-        self.q_learning.q_table.load(csv)
-
-    #Funtion to load the Q-table from a CSV file for double Q-Learning.
-    def load(self, csv1, csv2):
-        self.q_learning.A_q_table.load(csv1)
-        self.q_learning.B_q_table.load(csv2)
+        if len(csv) == 1 and not self.use_double:
+            self.q_learning.q_table.load(csv[0])
+        elif len(csv) == 2 and self.use_double:
+            self.q_learning.A_q_table.load(csv[0])
+            self.q_learning.B_q_table.load(csv[1])
+        else:
+            raise Exception("Invalid number of CSV files.")
         
     #Function to save the Q-table to a CSV file
     def to_CSV(self, name):

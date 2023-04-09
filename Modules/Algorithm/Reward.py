@@ -177,7 +177,7 @@ def get_reward(player: AI_Player, split_message: list):
                 opponent_critical = True
 
         #Check move miss.
-        elif msg[1] == "-miss":
+        elif msg[1] in ["-miss", "cant"]:
             if msg[2][0:2] == "p1":
                 reward -= player.opposing_hp
             elif msg[2][0:2] == "p2":
@@ -190,56 +190,27 @@ def get_reward(player: AI_Player, split_message: list):
             elif msg[2][0:2] == "p2":
                 reward += 25
 
-        #Check start of effect.
-        elif msg[1] == "-start":
-            if msg[2][0:2] == "p1":
-                pass
-            elif msg[2][0:2] == "p2":
-                pass
-
-        #Check end of effect.
-        elif msg[1] == "-end":
-            if msg[2][0:2] == "p1":
-                pass
-            elif msg[2][0:2] == "p2":
-                pass
-
-        #Check move cant
-        elif msg[1] == "cant":
-            if msg[2][0:2] == "p1":
-                #print(msg)
-                pass
-            elif msg[2][0:2] == "p2":
-                pass
-
         #Check move fail
         elif msg[1] == "-fail":
             if msg[2][0:2] == "p1":
-                pass
+                reward -= 50
             elif msg[2][0:2] == "p2":
-                pass
+                reward += 50
 
         #Check cure status
         elif msg[1] == "-curestatus":
             if msg[2][0:2] == "p1":
-                pass
+                reward += 25
             elif msg[2][0:2] == "p2":
-                pass
-
-        #Check move prepare
-        elif msg[1] == "-prepare":
-            if msg[2][0:2] == "p1":
-                pass
-            elif msg[2][0:2] == "p2":
-                pass
+                reward -= 25
 
         #Check faint
         elif msg[1] == "faint":
             if msg[2][0:2] == "p1":
-                pass
+                reward -= 100
             elif msg[2][0:2] == "p2":
-                pass
-
+                reward += 100
+                
         #Ignore and skip reward calculation.
         elif msg[1] in ["init", "title", "j", "gametype", "player", "teamsize", "gen", "tier", "rule", "start"]:
             skip = True
@@ -247,7 +218,7 @@ def get_reward(player: AI_Player, split_message: list):
         #Ignore but don't skip reward calculation.
         elif msg[1] in ["upkeep", "-singleturn", "-start", "-enditem", "-start", "-sidestart","-activate", "-sideend",
                          "-weather", "-anim", "-singlemove", "-endability", "-transform", "-notarget", "turn", "-hint",
-                         "-item", '-clearallboost', '-cureteam']:
+                         "-item", '-clearallboost', '-cureteam', '-end', '-prepare', "deinit"]:
             pass
 
         #Handle
@@ -302,6 +273,6 @@ def get_reward(player: AI_Player, split_message: list):
 
     
     #Check turn
-    if split_message[-1][1] == "turn":
+    #if split_message[-1][1] == "turn":
         #print("\nTurn: " + str(split_message[-1][2]))
-        pass
+        #pass

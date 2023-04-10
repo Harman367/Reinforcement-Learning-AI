@@ -188,11 +188,11 @@ async def main():
         #Print time taken to train
         print(f"\nTime taken to train AI player {i}: {round(time.time() - train_start, 2)} seconds")
 
-    # #Save the Q-table to a CSV file
-    # AI_s0.to_CSV("s0")
-    # AI_s1.to_CSV("s1")
-    # AI_d0.to_CSV("d0")
-    # AI_d1.to_CSV("d1")
+    #Save the Q-table to a CSV file
+    AI_players[0].to_CSV("s0 Avg")
+    # AI_players[0].to_CSV("s1 Avg")
+    # AI_players[0].to_CSV("d0 Avg")
+    # AI_players[0].to_CSV("d1 Avg")
 
     # #Save results to a JSON file
     save_results(rewards[0], "Reward Avg Single Q-Learning Type 0")

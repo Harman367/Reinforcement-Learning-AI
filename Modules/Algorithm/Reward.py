@@ -86,14 +86,14 @@ def get_reward(player: AI_Player, split_message: list):
                         player.move = player.move_types[player.move]
 
                     #print(player.move)
-                    reward -= 50
+                    reward -= 75
 
             elif msg[2][0:2] == "p2":
                 player.pre_opposing_hp = player.opposing_hp
                 player.opposing_hp = hp
 
                 if hp == 0 and atk_first:
-                    reward += 50
+                    reward += 75
 
                 #print("p2 " + str(player.opposing_pokemon) + " hp lost:" + str(-(player.pre_opposing_hp - player.opposing_hp)))
 
@@ -127,26 +127,19 @@ def get_reward(player: AI_Player, split_message: list):
             player.state = (player.current_pokemon + "_" + player.opposing_pokemon).lower()
             #print("State: " + str(player.state))
 
-        #Check ability
-        elif msg[1] == "-ability":
-            if msg[2][0:2] == "p1":
-                reward += 10
-            elif msg[2][0:2] == "p2":
-                reward -= 10
-
         #Check boost
         elif msg[1] == "-boost":
             if msg[2][0:2] == "p1":
                 reward += int(msg[-1]) * 10
             elif msg[2][0:2] == "p2":
-                reward -= int(msg[-1]) * 10
+                reward -= int(msg[-1]) * 5
 
         #Check unboost
         elif msg[1] == "-unboost":
             if msg[2][0:2] == "p1":
                 reward -= int(msg[-1]) * 5
             elif msg[2][0:2] == "p2":
-                reward += int(msg[-1]) * 5
+                reward += int(msg[-1]) * 2.5
 
         #Check move resistance
         elif msg[1] == "-resisted":
@@ -167,7 +160,7 @@ def get_reward(player: AI_Player, split_message: list):
             if msg[1][0:2] == "p1":
                 reward += player.current_hp
             elif msg[1][0:2] == "p2":
-                reward -= player.opposing_hp
+                reward -= player.opposing_hp * 2
 
         #Check move critical hit.
         elif msg[1] == "-crit":
@@ -181,35 +174,21 @@ def get_reward(player: AI_Player, split_message: list):
             if msg[2][0:2] == "p1":
                 reward -= player.opposing_hp
             elif msg[2][0:2] == "p2":
-                reward += player.current_hp
+                reward += player.current_hp / 2
 
         #Check status effect.
         elif msg[1] == "-status":
             if msg[2][0:2] == "p1":
                 reward -= 25
             elif msg[2][0:2] == "p2":
-                reward += 25
+                reward += 50
 
         #Check move fail
         elif msg[1] == "-fail":
             if msg[2][0:2] == "p1":
-                reward -= 50
-            elif msg[2][0:2] == "p2":
-                reward += 50
-
-        #Check cure status
-        elif msg[1] == "-curestatus":
-            if msg[2][0:2] == "p1":
-                reward += 25
-            elif msg[2][0:2] == "p2":
-                reward -= 25
-
-        #Check faint
-        elif msg[1] == "faint":
-            if msg[2][0:2] == "p1":
                 reward -= 100
             elif msg[2][0:2] == "p2":
-                reward += 100
+                reward += 50
                 
         #Ignore and skip reward calculation.
         elif msg[1] in ["init", "title", "j", "gametype", "player", "teamsize", "gen", "tier", "rule", "start"]:
@@ -218,7 +197,7 @@ def get_reward(player: AI_Player, split_message: list):
         #Ignore but don't skip reward calculation.
         elif msg[1] in ["upkeep", "-singleturn", "-start", "-enditem", "-start", "-sidestart","-activate", "-sideend",
                          "-weather", "-anim", "-singlemove", "-endability", "-transform", "-notarget", "turn", "-hint",
-                         "-item", '-clearallboost', '-cureteam', '-end', '-prepare', "deinit"]:
+                         "-item", '-clearallboost', '-cureteam', '-end', '-prepare', "deinit", "-ability", "faint", "-curestatus"]:
             pass
 
         #Handle
@@ -238,7 +217,7 @@ def get_reward(player: AI_Player, split_message: list):
 
     #Reward for attacking first.
     if atk_first:
-        reward += 50
+        reward += 100
     elif not atk_first:
         reward -= 50
 

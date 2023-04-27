@@ -62,6 +62,9 @@ async def main():
     AI_d0 = AI_Player(
         use_double=True,
         table_type=0,
+        gamma=0.9,
+        epsilon=0.5,
+        alpha=0.5,
         csv=["pokemon_preset_0.csv", "pokemon_preset_0.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
@@ -71,6 +74,7 @@ async def main():
     AI_d1 = AI_Player(
         use_double=True,
         table_type=1,
+        epsilon=0.9,
         csv=["type_preset_1.csv", "type_preset_1.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
@@ -92,12 +96,17 @@ async def main():
     )
 
     #Store AI players
-    #AI_players = [AI_s0, AI_s1, AI_d0, AI_d1]
-    AI_players = [AI_s0]
+    AI_players = [AI_s0, AI_s1, AI_d0, AI_d1]
+    #AI_players = [AI_s0]
+    #AI_players = [AI_s1]
+    #AI_players = [AI_d0]
+    #AI_players = [AI_d1]
+
+    #AI_players = [AI_d0, AI_d1]
 
     #Number of battles
-    n_battles = 100
-    concurrent_battles = 50
+    n_battles = 50
+    concurrent_battles = 150
 
     #Average
     average = 5
@@ -141,23 +150,27 @@ async def main():
             for k in range(1, n_battles + 1):
                 #Battle against max damage player
                 await AI.battle_against(max_damage_player, n_battles=concurrent_battles)
-                reward.append(AI.get_total_reward())
 
                 # #Battle against random player
                 await AI.battle_against(random_player, n_battles=concurrent_battles)
-                reward.append(AI.get_total_reward())
 
-
+                #Randomise team
                 AI.set_team(team_builder[randrange(len(team_builder))])
                 max_damage_player._team = team_builder[randrange(len(team_builder))]
-                #random_player._team = team_builder[randrange(len(team_builder))]
+                random_player._team = team_builder[randrange(len(team_builder))]
 
+                #Store rewards and wins
                 if k % (n_battles / n_battles) == 0:
+                    #Store rewards
+                    reward.append(AI.get_total_reward())
+
+                    #Store wins
                     new_wins = AI.n_won_battles - previous_wins
                     previous_wins = AI.n_won_battles
                     win.append(new_wins)
 
-                if k % (n_battles / 10)== 0:
+                #Print training progress.
+                if k % (n_battles / 25) == 0:
                     print(f"Battle {k * concurrent_battles * 2} finished")
 
             # Print the results
@@ -190,20 +203,20 @@ async def main():
 
     #Save the Q-table to a CSV file
     AI_players[0].to_CSV("s0 Avg")
-    # AI_players[0].to_CSV("s1 Avg")
-    # AI_players[0].to_CSV("d0 Avg")
-    # AI_players[0].to_CSV("d1 Avg")
+    AI_players[1].to_CSV("s1 Avg")
+    AI_players[2].to_CSV("Final Model")
+    AI_players[3].to_CSV("d1 e_0.9")
 
     # #Save results to a JSON file
     save_results(rewards[0], "Reward Avg Single Q-Learning Type 0")
-    #save_results(rewards[0], "Reward Avg Single Q-Learning Type 1")
-    #save_results(rewards[0], "Reward Avg Double Q-Learning Type 0")
-    #save_results(rewards[0], "Reward Avg Double Q-Learning Type 1")
+    save_results(rewards[1], "Reward Avg Single Q-Learning Type 1")
+    save_results(rewards[2], "Reward Final Model")
+    save_results(rewards[3], "Reward E 0.9 Double Q-Learning Type 1")
 
     save_results(wins[0], "Wins Avg Single Q-Learning Type 0")
-    #save_results(wins[0], "Wins Avg Single Q-Learning Type 1")
-    #save_results(wins[0], "Wins Avg Double Q-Learning Type 0")
-    #save_results(wins[0], "Wins Avg Double Q-Learning Type 1")
+    save_results(wins[1], "Wins Avg Single Q-Learning Type 1")
+    save_results(wins[2], "Wins Final Model")
+    save_results(wins[3], "Wins E 0.9 Double Q-Learning Type 1")
 
 #Run main
 if __name__ == "__main__":

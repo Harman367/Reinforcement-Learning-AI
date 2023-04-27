@@ -107,6 +107,8 @@ class Q_Learning:
         #Round Q-value.
         q_value = round(q_value, 1)
 
+        #print("Q-Value: " + str(q_value))
+
         #Update Q-Table.
         self.q_table.update(previous_state, action, q_value)
 

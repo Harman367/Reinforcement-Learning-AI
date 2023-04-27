@@ -1,5 +1,4 @@
 #Imports
-import numpy as np
 from poke_env.teambuilder import Teambuilder
 import json
 import random

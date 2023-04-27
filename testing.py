@@ -1,7 +1,5 @@
 #Imports
 import asyncio
-import time
-import json
 import random
 import numpy as np
 from random import randrange
@@ -27,52 +25,147 @@ async def main():
     AI_s0 = AI_Player(
         use_double=False,
         table_type=0,
-        csv=["pokemon_preset_0.csv"],
+        csv=["Results\CSV\Avg\s0 Avg.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
-        max_concurrent_battles=0,
+        max_concurrent_battles=1,
     )
 
     AI_s1 = AI_Player(
         use_double=False,
         table_type=1,
-        csv=["type_preset_1.csv"],
+        csv=["Results\CSV\Avg\s1 Avg.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
-        max_concurrent_battles=0,
+        max_concurrent_battles=1,
     )
 
     AI_d0 = AI_Player(
         use_double=True,
         table_type=0,
-        csv=["pokemon_preset_0.csv", "pokemon_preset_0.csv"],
+        csv=["Results\CSV\Avg\A_d0 Avg.csv", "Results\CSV\Avg\B_d0 Avg.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
-        max_concurrent_battles=0,
+        max_concurrent_battles=1,
     )
 
     AI_d1 = AI_Player(
         use_double=True,
         table_type=1,
-        csv=["type_preset_1.csv", "type_preset_1.csv"],
+        csv=["Results\CSV\Avg\A_d1 Avg.csv", "Results\CSV\Avg\B_d1 Avg.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
-        max_concurrent_battles=0,
+        max_concurrent_battles=1,
     )
 
-    #Max damage player
-    max_damage_player = MaxDamagePlayer(
+    AI_d0_a_05 = AI_Player(
+        use_double=True,
+        table_type=0,
+        csv=["Results\CSV\A_d0 a_0.5.csv", "Results\CSV\B_d0 a_0.5.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
-        max_concurrent_battles=0,
+        max_concurrent_battles=1,
     )
 
-    #Random player
-    random_player = RandomPlayer(
+    AI_d0_a_09 = AI_Player(
+        use_double=True,
+        table_type=0,
+        csv=["Results\CSV\A_d0 a_0.9.csv", "Results\CSV\B_d0 a_0.9.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
-        max_concurrent_battles=0,
+        max_concurrent_battles=1,
     )
+
+    AI_d0_e_05 = AI_Player(
+        use_double=True,
+        table_type=0,
+        csv=["Results\CSV\A_d0 e_0.5.csv", "Results\CSV\B_d0 e_0.5.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d0_e_09 = AI_Player(
+        use_double=True,
+        table_type=0,
+        csv=["Results\CSV\A_d0 e_0.9.csv", "Results\CSV\B_d0 e_0.9.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d0_g_02 = AI_Player(
+        use_double=True,
+        table_type=0,
+        csv=["Results\CSV\A_d0 g_0.2.csv", "Results\CSV\B_d0 g_0.2.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d0_g_09 = AI_Player(
+        use_double=True,
+        table_type=0,
+        csv=["Results\CSV\A_d0 g_0.9.csv", "Results\CSV\B_d0 g_0.9.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d1_a_05 = AI_Player(
+        use_double=True,
+        table_type=1,
+        csv=["Results\CSV\A_d1 a_0.5.csv", "Results\CSV\B_d1 a_0.5.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d1_a_09 = AI_Player(
+        use_double=True,
+        table_type=1,
+        csv=["Results\CSV\A_d1 a_0.9.csv", "Results\CSV\B_d1 a_0.9.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d1_e_05 = AI_Player(
+        use_double=True,
+        table_type=1,
+        csv=["Results\CSV\A_d1 e_0.5.csv", "Results\CSV\B_d1 e_0.5.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d1_e_09 = AI_Player(
+        use_double=True,
+        table_type=1,
+        csv=["Results\CSV\A_d1 e_0.9.csv", "Results\CSV\B_d1 e_0.9.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d1_g_02 = AI_Player(
+        use_double=True,
+        table_type=1,
+        csv=["Results\CSV\A_d1 g_0.2.csv", "Results\CSV\B_d1 g_0.2.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
+    AI_d1_g_09 = AI_Player(
+        use_double=True,
+        table_type=1,
+        csv=["Results\CSV\A_d1 g_0.9.csv", "Results\CSV\B_d1 g_0.9.csv"],
+        battle_format="gen4anythinggoes",
+        team=team_builder[randrange(len(team_builder))],
+        max_concurrent_battles=1,
+    )
+
 
     #Set whether test against human or not.
     against_human = False
@@ -81,7 +174,7 @@ async def main():
         #Reference: https://poke-env.readthedocs.io/en/latest/cross_evaluate_random_players.html
 
         #Store players
-        players = [AI_s0, AI_s1, AI_d0, AI_d1, max_damage_player, random_player]
+        players = [AI_s0, AI_s1, AI_d0, AI_d1, AI_d0_a_05, AI_d0_a_09, AI_d0_e_05, AI_d0_e_09, AI_d0_g_02, AI_d0_g_09, AI_d1_a_05, AI_d1_a_09, AI_d1_e_05, AI_d1_e_09, AI_d1_g_02, AI_d1_g_09]
         
         for i in range(1, 6):
             print(f"Round {i} of 5")
@@ -112,8 +205,8 @@ async def main():
             print(f"{player.username} is ready to accept challenges.")
 
             #For each team
-            for i in range(len(team_builder)):
-                print(f"Round {i} of {len(team_builder)}")
+            for i in range(10):
+                print(f"Round {i} of {10}")
                 player._team = team_builder[i]
                 await player.send_challenges(n_challenges=2, opponent="Guest 44")
 

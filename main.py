@@ -60,7 +60,7 @@ async def main():
     AI_s1 = AI_Player(
         use_double=False,
         table_type=1,
-        #csv="Results\Test.csv",
+        csv=["type_preset_1.csv"],
         battle_format="gen4anythinggoes",
         team=team_builder[randrange(len(team_builder))],
     )
@@ -94,10 +94,10 @@ async def main():
     )
 
     #Store AI players
-    AI_players = [AI_s0, AI_s1, AI_d0, AI_d1]
+    AI_players = [AI_s1]
 
     #Number of battles
-    n_battles = 2500
+    n_battles = 1
 
     #Number of battels won
     previous_wins = 0
@@ -109,11 +109,11 @@ async def main():
 
         for _ in range(1, n_battles + 1):
             #Battle against max damage player
-            await AI.battle_against(max_damage_player, n_battles=1)
+            await AI.battle_against(max_damage_player, n_battles=1000)
             rewards[i].append(AI.get_total_reward())
 
             #Battle against random player
-            await AI.battle_against(random_player, n_battles=1)
+            await AI.battle_against(random_player, n_battles=1000)
             rewards[i].append(AI.get_total_reward())
 
 
@@ -134,23 +134,25 @@ async def main():
         
         AI.reset_battles()
 
+    print(AI_players[0].pokemon_types)
+
 
     #Save the Q-table to a CSV file
-    AI_s0.to_CSV("s0")
-    AI_s1.to_CSV("s1")
-    AI_d0.to_CSV("d0")
-    AI_d1.to_CSV("d1")
+    # AI_s0.to_CSV("s0")
+    # AI_s1.to_CSV("s1")
+    # AI_d0.to_CSV("d0")
+    # AI_d1.to_CSV("d1")
 
-    #Save results to a JSON file
-    save_results(reward_s0, "Reward Single Q-Learning Type 0")
-    save_results(reward_s1, "Reward Single Q-Learning Type 1")
-    save_results(reward_d0, "Reward Double Q-Learning Type 0")
-    save_results(reward_d1, "Reward Double Q-Learning Type 1")
+    # #Save results to a JSON file
+    # save_results(reward_s0, "Reward Single Q-Learning Type 0")
+    # save_results(reward_s1, "Reward Single Q-Learning Type 1")
+    # save_results(reward_d0, "Reward Double Q-Learning Type 0")
+    # save_results(reward_d1, "Reward Double Q-Learning Type 1")
 
-    save_results(win_s0, "Wins Single Q-Learning Type 0")
-    save_results(win_s1, "Wins Single Q-Learning Type 1")
-    save_results(win_d0, "Wins Double Q-Learning Type 0")
-    save_results(win_d1, "Wins Double Q-Learning Type 1")
+    # save_results(win_s0, "Wins Single Q-Learning Type 0")
+    # save_results(win_s1, "Wins Single Q-Learning Type 1")
+    # save_results(win_d0, "Wins Double Q-Learning Type 0")
+    # save_results(win_d1, "Wins Double Q-Learning Type 1")
 
 #Run main
 if __name__ == "__main__":

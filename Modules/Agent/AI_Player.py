@@ -10,14 +10,44 @@ from poke_env.player import Player
 class AI_Player(Player):
 
     #Constructor
-    def __init__(self, use_double, table_type, csv=None, **kwargs):
+    def __init__(self, use_double, table_type, csv=None, alpha = 0.1, gamma = 0.6, epsilon = 0.1, **kwargs):
         super().__init__(**kwargs)
 
         #Pokemon types
-        self.pokemon_types = {}
+        self.pokemon_types = {
+            'Registeel': ['STEEL', 'None'], 'Tentacruel': ['WATER', 'POISON'], 'Tangrowth': ['GRASS', 'None'],
+            'Metagross': ['STEEL', 'PSYCHIC'], 'Moltres': ['FIRE', 'FLYING'], 'Heracross': ['BUG', 'FIGHTING'],
+            'Machamp': ['FIGHTING', 'None'], 'Blissey': ['NORMAL', 'None'], 'Feraligatr': ['WATER', 'None'],
+            'Kingdra': ['WATER', 'DRAGON'], 'Togekiss': ['NORMAL', 'FLYING'], 'Mamoswine': ['ICE', 'GROUND']
+        }
 
         #Move types
-        self.move_types = {}
+        self.move_types = {
+            'swordsdance': 'NORMAL_STATUS', 'closecombat': 'FIGHTING_PHYSICAL', 'megahorn': 'BUG_PHYSICAL',
+            'facade': 'NORMAL_PHYSICAL', 'waterfall': 'WATER_PHYSICAL', 'aquajet': 'WATER_PHYSICAL',
+            'return': 'NORMAL_PHYSICAL', 'meteormash': 'STEEL_PHYSICAL', 'earthquake': 'GROUND_PHYSICAL',
+            'explosion': 'NORMAL_PHYSICAL', 'bulletpunch': 'STEEL_PHYSICAL', 'poisonjab': 'POISON_PHYSICAL',
+            'hydropump': 'WATER_SPECIAL', 'rest': 'PSYCHIC_STATUS', 'sleeptalk': 'NORMAL_STATUS',
+            'dynamicpunch': 'FIGHTING_PHYSICAL', 'payback': 'DARK_PHYSICAL', 'encore': 'NORMAL_STATUS',
+            'wish': 'NORMAL_STATUS', 'airslash': 'FLYING_SPECIAL', 'thunderwave': 'ELECTRIC_STATUS',
+            'struggle': 'NORMAL_PHYSICAL', 'nightslash': 'DARK_PHYSICAL', 'iceshard': 'ICE_PHYSICAL',
+            'lowkick': 'FIGHTING_PHYSICAL', 'shadowball': 'GHOST_SPECIAL', 'willowisp': 'FIRE_STATUS',
+            'substitute': 'NORMAL_STATUS', 'leechseed': 'GRASS_STATUS', 'spore': 'GRASS_STATUS',
+            'focuspunch': 'FIGHTING_PHYSICAL', 'stealthrock': 'ROCK_STATUS', 'taunt': 'DARK_STATUS',
+            'uturn': 'BUG_PHYSICAL', 'reflect': 'PSYCHIC_STATUS', 'lightscreen': 'PSYCHIC_STATUS',
+            'softboiled': 'NORMAL_STATUS', 'flamethrower': 'FIRE_SPECIAL', 'toxic': 'POISON_STATUS',
+            'rapidspin': 'NORMAL_PHYSICAL', 'earthpower': 'GROUND_SPECIAL', 'trick': 'PSYCHIC_STATUS',
+            'fakeout': 'NORMAL_PHYSICAL', 'counter': 'FIGHTING_PHYSICAL', 'icepunch': 'ICE_PHYSICAL',
+            'leafstorm': 'GRASS_SPECIAL', 'hiddenpower': 'DARK_SPECIAL', 'batonpass': 'NORMAL_STATUS',
+            'meanlook': 'NORMAL_STATUS', 'protect': 'NORMAL_STATUS', 'roost': 'FLYING_STATUS',
+            'superfang': 'NORMAL_PHYSICAL', 'endeavor': 'NORMAL_PHYSICAL', 'dracometeor': 'DRAGON_SPECIAL',
+            'surf': 'WATER_SPECIAL', 'dragonpulse': 'DRAGON_SPECIAL', 'aromatherapy': 'GRASS_STATUS',
+            'seismictoss': 'FIGHTING_PHYSICAL', 'sleeppowder': 'GRASS_STATUS', 'knockoff': 'DARK_PHYSICAL',
+            'grassknot': 'GRASS_SPECIAL', 'icebeam': 'ICE_SPECIAL', 'thunderbolt': 'ELECTRIC_SPECIAL',
+            'superpower': 'FIGHTING_PHYSICAL', 'haze': 'ICE_STATUS', 'recover': 'NORMAL_STATUS',
+            'whirlwind': 'NORMAL_STATUS', 'rockslide': 'ROCK_PHYSICAL', 'psychic': 'PSYCHIC_SPECIAL',
+            'psychocut': 'PSYCHIC_PHYSICAL', 'stoneedge': 'ROCK_PHYSICAL'
+        }
 
         #Table type
         self.table_type = table_type
@@ -27,9 +57,9 @@ class AI_Player(Player):
 
         #Setup doubele Q-Learning
         if self.use_double:
-            self.q_learning = Double_Q_Learning(table_type, self.move_types)
+            self.q_learning = Double_Q_Learning(table_type, self.move_types, alpha = alpha, gamma = gamma, epsilon = epsilon,)
         else:
-            self.q_learning = Q_Learning(table_type, self.move_types)
+            self.q_learning = Q_Learning(table_type, self.move_types, alpha = alpha, gamma = gamma, epsilon = epsilon)
 
         #Table Type 0: State: Pokemon, Action: Move
         #Table Type 1: State: Pokemon Type, Action: Move Type

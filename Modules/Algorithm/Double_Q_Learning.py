@@ -1,7 +1,6 @@
 #Imports
 import random
 from Modules.Algorithm.Q_Table import Q_Table
-from Modules.Algorithm.Q_Learning import Q_Learning
 
 #Class to implement Q-learning.
 class Double_Q_Learning:
@@ -118,6 +117,8 @@ class Double_Q_Learning:
 
         #Round Q-value.
         q_value = round(q_value, 1)
+
+        #print("Q-Value: " + str(q_value))
 
         #Update Q-Table.
         self.q_tables[update_table].update(previous_state, action, q_value)

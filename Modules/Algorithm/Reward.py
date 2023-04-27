@@ -2,7 +2,7 @@
 import re
 from Modules.Agent import AI_Player
 
-#Make into class
+#Function to get the reward for the player.
 
 def get_reward(player: AI_Player, split_message: list):
 
